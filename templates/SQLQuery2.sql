@@ -1,0 +1,45 @@
+ USE HouseholdInventoryDb;
+ 
+ ALTER TABLE Items ADD CurrentQuantity DECIMAL(10,2) NOT NULL DEFAULT 0;
+
+ ALTER TABLE Items ADD Flag BIT NOT NULL DEFAULT 0;
+
+ ALTER TABLE Items ADD Notes NVARCHAR(255) NULL;
+
+ DROP TABLE ItemBrands;
+
+ ALTER TABLE TransactionLines DROP CONSTRAINT UQ_TransactionLines_TransactionItemBrand;
+
+ ALTER TABLE TransactionLines DROP CONSTRAINT FK__Transacti__Brand__72C60C4A;
+ ALTER TABLE TransactionLines DROP COLUMN BrandId;
+
+ ALTER TABLE TransactionLines ADD CONSTRAINT UQ_TransactionLines_TransactionItem UNIQUE (TransactionId, ItemId);
+
+ CREATE TABLE Users (
+        Id INT IDENTITY PRIMARY KEY,
+        Us_Name NVARCHAR(100) NOT NULL,
+        PasswordHash NVARCHAR(255) NOT NULL
+ );
+
+ CREATE TABLE GroceryLists (
+        Id INT IDENTITY PRIMARY KEY,
+        CreatedAt DATETIME NOT NULL DEFAULT GETUTCDATE(),
+        Gr_Name NVARCHAR(100) NULL,
+        Status NVARCHAR(20) NOT NULL DEFAULT 'Active'
+ );
+
+ CREATE TABLE GroceryListItems (
+        Id INT IDENTITY PRIMARY KEY,
+        GroceryListId INT NOT NULL FOREIGN KEY REFERENCES GroceryLists(Id),
+        ItemId INT NOT NULL FOREIGN KEY REFERENCES Items(Id),
+        QuantityNeeded DECIMAL(10,2) NOT NULL DEFAULT 1,
+        IsChecked BIT NOT NULL DEFAULT 0,
+        CONSTRAINT UQ_GroceryListItems_ListItem UNIQUE (GroceryListId, ItemId)
+  );
+
+  ALTER TABLE Categories ADD UserId INT NOT NULL FOREIGN KEY REFERENCES Users(Id);
+  ALTER TABLE Brands ADD UserId INT NOT NULL FOREIGN KEY REFERENCES Users(Id);
+  ALTER TABLE Stores ADD UserId INT NOT NULL FOREIGN KEY REFERENCES Users(Id);
+  ALTER TABLE Items ADD UserId INT NOT NULL FOREIGN KEY REFERENCES Users(Id);
+  ALTER TABLE Transactions ADD UserId INT NOT NULL FOREIGN KEY REFERENCES Users(Id);
+  ALTER TABLE GroceryLists ADD UserId INT NOT NULL FOREIGN KEY REFERENCES Users(Id);
