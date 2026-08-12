@@ -26,7 +26,6 @@ C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\obj\D
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\obj\Debug\net10.0\staticwebassets.development.json
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\obj\Debug\net10.0\staticwebassets.build.endpoints.json
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\obj\Debug\net10.0\swae.build.ex.cache
-C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\obj\Debug\net10.0\Inventor.882E0EE4.Up2Date
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\obj\Debug\net10.0\InventoryApi.dll
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\obj\Debug\net10.0\refint\InventoryApi.dll
@@ -69,3 +68,4 @@ C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\bin\D
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

@@ -6,7 +6,9 @@
         public int UserId { get; set; }
         public string It_Name { get; set; } = string.Empty;
         public int CategoryId { get; set; }
+        public int? BrandId { get; set; }
         public decimal Threshold { get; set; }
+        public string UnitOfMeasure { get; set; } = "Piece";
         public decimal CurrentQuantity { get; set; }
         public bool Flag { get; set; }
         public string? Notes { get; set; }

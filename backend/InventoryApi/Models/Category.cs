@@ -6,6 +6,6 @@
 
         public int UserId { get; set; }
         public string Cat_Name { get; set; } = string.Empty;
-        public string? Description { get; set; }
+        public string? Cat_Description { get; set; }
     }
 }
