@@ -10,10 +10,12 @@ namespace InventoryApi.Repositories
     public class TransactionRepository : ITransactionRepository
     {
         private readonly IDbConnectionFactory _connectionFactory;
+        private readonly IInventoryBatchRepository _batchRepository;
 
-        public TransactionRepository(IDbConnectionFactory connectionFactory)
+        public TransactionRepository(IDbConnectionFactory connectionFactory, IInventoryBatchRepository batchRepository)
         {
             _connectionFactory = connectionFactory;
+            _batchRepository = batchRepository;
         }
 
         public async Task<IEnumerable<Transaction>> GetAllAsync(int userId)
@@ -39,7 +41,7 @@ namespace InventoryApi.Repositories
             return await connection.QueryAsync<TransactionLine>(sql, new { TransactionId = transactionId, UserId = userId });
         }
 
-        public async Task<int> CreateWithLinesAsync(int userId, CreateTransactionDto dto)
+        public async Task<int> CreateWithLinesAsync(int userId, CreateTransactionDto dto, List<LinePlan> plans)
         {
             using var connection = _connectionFactory.CreateConnection();
             connection.Open();
@@ -47,21 +49,49 @@ namespace InventoryApi.Repositories
             try
             {
                 var transactionId = await connection.QuerySingleAsync<int>(@"
-                                    INSERT INTO Transactions (UserId, Type, Date, Notes, StoreId)
-                                    OUTPUT INSERTED.Id
-                                    VALUES (@UserId, @Type, @Date, @Notes, @StoreId)", new { UserId = userId, dto.Type, dto.Date, dto.Notes, dto.StoreId }, dbTransaction);
+                    INSERT INTO Transactions (UserId, Type, Date, Notes, StoreId)
+                    OUTPUT INSERTED.Id
+                    VALUES (@UserId, @Type, @Date, @Notes, @StoreId)",
+                    new { UserId = userId, dto.Type, dto.Date, dto.Notes, dto.StoreId }, dbTransaction);
 
-                foreach (var line in dto.Lines)
+                foreach (var plan in plans)
                 {
-                    await connection.ExecuteAsync(@"
-                    INSERT INTO TransactionLines (TransactionId, ItemId, Quantity, UnitPrice)
-                    VALUES (@TransactionId, @ItemId, @Quantity, @UnitPrice)",
-                    new { TransactionId = transactionId, line.ItemId, line.Quantity, line.UnitPrice }, dbTransaction);
+                    var line = plan.Line;
 
+                    var lineId = await connection.QuerySingleAsync<int>(@"
+                        INSERT INTO TransactionLines (TransactionId, ItemId, BatchId, Quantity, UnitPrice)
+                        OUTPUT INSERTED.Id
+                        VALUES (@TransactionId, @ItemId, @BatchId, @Quantity, @UnitPrice)",
+                        new { TransactionId = transactionId, line.ItemId, line.BatchId, line.Quantity, line.UnitPrice }, dbTransaction);
+
+                    foreach (var op in plan.BatchOperations)
+                    {
+                        if (op.IsNewBatch)
+                        {
+                            var newBatch = new InventoryBatch
+                            {
+                                ItemId = line.ItemId,
+                                TransactionLineId = lineId,
+                                PurchasedQuantity = op.Amount,
+                                RemainingQuantity = op.Amount,
+                                UnitPrice = op.UnitPrice,
+                                PurchaseDate = dto.Date,
+                                ExpirationDate = line.ExpirationDate
+                            };
+                            await _batchRepository.CreateAsync(newBatch, connection, dbTransaction);
+                        }
+                        else
+                        {
+                            await _batchRepository.ReduceRemainingAsync(op.ExistingBatchId!.Value, op.Amount, connection, dbTransaction);
+                        }
+                    }
+
+                    // Recalculate CurrentQuantity from batches, inside the same atomic transaction
                     await connection.ExecuteAsync(@"
-                    UPDATE Items SET CurrentQuantity = CurrentQuantity + @Quantity
-                    WHERE Id = @ItemId AND UserId = @UserId",
-                    new { line.Quantity, line.ItemId, UserId = userId }, dbTransaction);
+                        UPDATE Items 
+                        SET CurrentQuantity = (SELECT ISNULL(SUM(RemainingQuantity), 0) FROM InventoryBatches WHERE ItemId = @ItemId)
+                        WHERE Id = @ItemId AND UserId = @UserId",
+                        new { ItemId = line.ItemId, UserId = userId }, dbTransaction);
                 }
 
                 dbTransaction.Commit();
@@ -74,4 +104,5 @@ namespace InventoryApi.Repositories
             }
         }
     }
+
 }

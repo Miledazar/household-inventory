@@ -52,6 +52,164 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "InventoryApi.Controllers.GroceryListsController",
+    "Method": "GetAll",
+    "RelativePath": "api/GroceryLists",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.GroceryListsController",
+    "Method": "CreateEmpty",
+    "RelativePath": "api/GroceryLists",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "InventoryApi.Models.Dtos.GroceryListDtos\u002BCreateGroceryListDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.GroceryListsController",
+    "Method": "GetById",
+    "RelativePath": "api/GroceryLists/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.GroceryListsController",
+    "Method": "CloseList",
+    "RelativePath": "api/GroceryLists/{id}/close",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.GroceryListsController",
+    "Method": "FinishShopping",
+    "RelativePath": "api/GroceryLists/{id}/finish-shopping",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.GroceryListsController",
+    "Method": "GetItems",
+    "RelativePath": "api/GroceryLists/{id}/items",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.GroceryListsController",
+    "Method": "AddItem",
+    "RelativePath": "api/GroceryLists/{id}/items",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "InventoryApi.Models.Dtos.GroceryListDtos\u002BAddGroceryListItemDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.GroceryListsController",
+    "Method": "GenerateFromThreshold",
+    "RelativePath": "api/GroceryLists/generate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.GroceryListsController",
+    "Method": "RemoveItem",
+    "RelativePath": "api/GroceryLists/items/{groceryListItemId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groceryListItemId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.GroceryListsController",
+    "Method": "SetChecked",
+    "RelativePath": "api/GroceryLists/items/{groceryListItemId}/check",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groceryListItemId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "isChecked",
+        "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "InventoryApi.Controllers.ItemsController",
     "Method": "GetAll",
     "RelativePath": "api/Items",

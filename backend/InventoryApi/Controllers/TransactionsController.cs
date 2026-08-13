@@ -1,5 +1,6 @@
 ﻿using InventoryApi.Interfaces;
 using InventoryApi.Models.Dtos;
+using InventoryApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using static InventoryApi.Models.Dtos.TransactionDtos;
 
@@ -10,10 +11,12 @@ namespace InventoryApi.Controllers
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionRepository _repository;
+        private readonly TransactionService _transactionService;
 
-        public TransactionsController(ITransactionRepository repository)
+        public TransactionsController(ITransactionRepository repository, TransactionService transactionService)
         {
             _repository = repository;
+            _transactionService = transactionService;
         }
 
         [HttpGet]
@@ -41,8 +44,15 @@ namespace InventoryApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateTransactionDto dto)
         {
-            var id = await _repository.CreateWithLinesAsync(userId: 1, dto);
-            return Ok(new { id });
+            try
+            {
+                var id = await _transactionService.CreateTransactionAsync(userId: 1, dto);
+                return Ok(new { id });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

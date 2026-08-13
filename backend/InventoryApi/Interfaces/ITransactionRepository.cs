@@ -9,6 +9,6 @@ namespace InventoryApi.Interfaces
         Task<IEnumerable<Transaction>> GetAllAsync(int userId);
         Task<Transaction?> GetByIdAsync(int id, int userId);
         Task<IEnumerable<TransactionLine>> GetLinesAsync(int transactionId, int userId);
-        Task<int> CreateWithLinesAsync(int userId, CreateTransactionDto dto);
+        Task<int> CreateWithLinesAsync(int userId, CreateTransactionDto dto, List<LinePlan> plans);
     }
 }

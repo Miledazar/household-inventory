@@ -3,24 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\repositories\\transactionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:repositories\\transactionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\controllers\\grocerylistscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:controllers\\grocerylistscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\controllers\\transactionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:controllers\\transactionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\services\\grocerylistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:services\\grocerylistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\interfaces\\itransactionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:interfaces\\itransactionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\models\\dtos\\grocerylistdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:models\\dtos\\grocerylistdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\models\\dtos\\transactiondtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:models\\dtos\\transactiondtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\interfaces\\igrocerylistrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:interfaces\\igrocerylistrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\models\\grocerylistitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:models\\grocerylistitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\repositories\\grocerylistrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:repositories\\grocerylistrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\models\\grocerylist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:models\\grocerylist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,19 +42,97 @@
       "DocumentGroups": [
         {
           "DockedWidth": 307,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "TransactionsController.cs",
-              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\TransactionsController.cs",
-              "RelativeDocumentMoniker": "Controllers\\TransactionsController.cs",
-              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\TransactionsController.cs",
-              "RelativeToolTip": "Controllers\\TransactionsController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAswC8AAAABAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "GroceryListsController.cs",
+              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\GroceryListsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\GroceryListsController.cs",
+              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\GroceryListsController.cs",
+              "RelativeToolTip": "Controllers\\GroceryListsController.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAiwG0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-12T10:01:27.105Z",
+              "WhenOpened": "2026-08-13T11:32:33.99Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "GroceryListService.cs",
+              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Services\\GroceryListService.cs",
+              "RelativeDocumentMoniker": "Services\\GroceryListService.cs",
+              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Services\\GroceryListService.cs",
+              "RelativeToolTip": "Services\\GroceryListService.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAIwD8AAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-13T10:48:41.857Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "GroceryListRepository.cs",
+              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Repositories\\GroceryListRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\GroceryListRepository.cs",
+              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Repositories\\GroceryListRepository.cs",
+              "RelativeToolTip": "Repositories\\GroceryListRepository.cs",
+              "ViewState": "AgIAAHwAAAAAAAAAAAAcwI0AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-13T10:16:36.355Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IGroceryListRepository.cs",
+              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Interfaces\\IGroceryListRepository.cs",
+              "RelativeDocumentMoniker": "Interfaces\\IGroceryListRepository.cs",
+              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Interfaces\\IGroceryListRepository.cs",
+              "RelativeToolTip": "Interfaces\\IGroceryListRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-13T09:29:59.034Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GroceryListDtos.cs",
+              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Models\\Dtos\\GroceryListDtos.cs",
+              "RelativeDocumentMoniker": "Models\\Dtos\\GroceryListDtos.cs",
+              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Models\\Dtos\\GroceryListDtos.cs",
+              "RelativeToolTip": "Models\\Dtos\\GroceryListDtos.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-13T09:27:08.302Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "GroceryListItem.cs",
+              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Models\\GroceryListItem.cs",
+              "RelativeDocumentMoniker": "Models\\GroceryListItem.cs",
+              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Models\\GroceryListItem.cs",
+              "RelativeToolTip": "Models\\GroceryListItem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-13T09:25:04.862Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "GroceryList.cs",
+              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Models\\GroceryList.cs",
+              "RelativeDocumentMoniker": "Models\\GroceryList.cs",
+              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Models\\GroceryList.cs",
+              "RelativeToolTip": "Models\\GroceryList.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-13T09:24:37.047Z",
               "EditorCaption": ""
             },
             {
@@ -53,48 +143,9 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAABMAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABoAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-12T10:00:19.947Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "TransactionRepository.cs",
-              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Repositories\\TransactionRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\TransactionRepository.cs",
-              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Repositories\\TransactionRepository.cs",
-              "RelativeToolTip": "Repositories\\TransactionRepository.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAkwEQAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-12T08:22:46.613Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ITransactionRepository.cs",
-              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Interfaces\\ITransactionRepository.cs",
-              "RelativeDocumentMoniker": "Interfaces\\ITransactionRepository.cs",
-              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Interfaces\\ITransactionRepository.cs",
-              "RelativeToolTip": "Interfaces\\ITransactionRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABLAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-12T08:17:30.431Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "TransactionDtos.cs",
-              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Models\\Dtos\\TransactionDtos.cs",
-              "RelativeDocumentMoniker": "Models\\Dtos\\TransactionDtos.cs",
-              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Models\\Dtos\\TransactionDtos.cs",
-              "RelativeToolTip": "Models\\Dtos\\TransactionDtos.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-12T07:45:28.5Z",
               "EditorCaption": ""
             }
           ]
