@@ -86,11 +86,11 @@ namespace InventoryApi.Controllers
         }
 
         [HttpPost("{id}/finish-shopping")]
-        public async Task<IActionResult> FinishShopping(int id)
+        public async Task<IActionResult> FinishShopping(int id, [FromQuery] int? storeId)
         {
             try
             {
-                var transactionId = await _service.FinishShoppingAsync(userId: 1, id);
+                var transactionId = await _service.FinishShoppingAsync(userId: 1, id, storeId);
                 return Ok(new { transactionId });
             }
             catch (ArgumentException ex)

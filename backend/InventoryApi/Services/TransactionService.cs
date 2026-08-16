@@ -55,7 +55,7 @@ namespace InventoryApi.Services
                     {
                         IsNewBatch = true,
                         Amount = Math.Abs(line.Quantity),
-                        UnitPrice = line.UnitPrice ?? 0  // unknown price defaults to 0, never null
+                        UnitPrice = line.UnitPrice ?? 0 
                     });
                 }
                 else

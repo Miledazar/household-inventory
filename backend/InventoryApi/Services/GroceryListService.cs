@@ -46,32 +46,50 @@ namespace InventoryApi.Services
             return await _groceryListRepository.SetCheckedAsync(groceryListItemId, userId, isChecked);
         }
 
-        public async Task<int> FinishShoppingAsync(int userId, int groceryListId)
+        public async Task<int> FinishShoppingAsync(int userId, int groceryListId, int? storeId)
         {
-            var list = await _groceryListRepository.GetByIdAsync(groceryListId, userId)
-                ?? throw new ArgumentException("Grocery list not found.");
+            var list = await _groceryListRepository.GetByIdAsync(groceryListId, userId) ?? throw new ArgumentException("Grocery list not found");
 
             var checkedItems = (await _groceryListRepository.GetCheckedItemsAsync(groceryListId, userId)).ToList();
-            if (checkedItems.Count == 0)
+            if(checkedItems.Count == 0)
+            {
                 throw new ArgumentException("No items checked — nothing to purchase.");
+            }
+            if(checkedItems.Any(i => i.EstimatedPrice == null))
+            {
+                throw new ArgumentException("All checked items must have a price before finishing shopping.");
+            }
 
             var transactionDto = new CreateTransactionDto
             {
                 Type = "Purchase",
                 Date = DateTime.UtcNow,
                 Notes = $"From grocery list: {list.Gr_Name}",
-                StoreId = null,
+                StoreId = storeId,
                 Lines = checkedItems.Select(i => new CreateTransactionLineDto
                 {
                     ItemId = i.ItemId,
                     Quantity = i.QuantityNeeded,
-                    UnitPrice = null
+                    UnitPrice = i.EstimatedPrice
                 }).ToList()
             };
 
-            return await _transactionService.CreateTransactionAsync(userId, transactionDto);
-        }
+            var transactionId = await _transactionService.CreateTransactionAsync(userId, transactionDto);
 
+            foreach (var item in checkedItems)
+            {
+                await _groceryListRepository.RemoveItemAsync(item.Id, userId);
+            }
+
+            var remainingItems = await _groceryListRepository.GetItemsAsync(groceryListId, userId);
+            if (!remainingItems.Any())
+            {
+                await _groceryListRepository.SetStatusAsync(groceryListId, userId, "Completed");
+            }
+
+            return transactionId;
+        }
+      
         public async Task<bool> CloseListAsync(int userId, int groceryListId)
         {
             return await _groceryListRepository.SetStatusAsync(groceryListId, userId, "Completed");

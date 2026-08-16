@@ -96,7 +96,6 @@ namespace InventoryApi.Repositories
         public async Task<int> AddItemAsync(int groceryListId, int userId, int itemId, decimal quantityNeeded)
         {
             using var connection = _connectionFactory.CreateConnection();
-            // Confirm the list belongs to this user before inserting
             var list = await connection.QuerySingleOrDefaultAsync<GroceryList>(
                 "SELECT * FROM GroceryLists WHERE Id = @Id AND UserId = @UserId",
                 new { Id = groceryListId, UserId = userId });
