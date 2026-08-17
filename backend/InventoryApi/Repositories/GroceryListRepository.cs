@@ -17,7 +17,7 @@ namespace InventoryApi.Repositories
         public async Task<IEnumerable<GroceryList>> GetAllAsync(int userId)
         {
             using var connection = _connectionFactory.CreateConnection();
-            const string sql = "SELECT * FROM GroceryLists WHERE UserId = @UserId";
+            const string sql = "SELECT * FROM GroceryLists WHERE UserId = @UserId AND Status = 'Active'";
             return await connection.QueryAsync<GroceryList>(sql, new { UserId = userId });
         }
 
@@ -32,22 +32,32 @@ namespace InventoryApi.Repositories
         {
             using var connection = _connectionFactory.CreateConnection();
             const string sql = @"
-                SELECT * FROM GroceryListItems 
+                SELECT GroceryListItems.Id, GroceryListItems.GroceryListId, GroceryListItems.ItemId, GroceryListItems.QuantityNeeded, GroceryListItems.IsChecked, GroceryListItems.EstimatedPrice FROM GroceryListItems 
                 JOIN GroceryLists  ON GroceryLists.Id = GroceryListItems.GroceryListId
                 WHERE GroceryListItems.GroceryListId = @GroceryListId AND GroceryLists.UserId = @UserId";
             return await connection.QueryAsync<GroceryListItem>(sql, new { GroceryListId = groceryListId, UserId = userId });
         }
 
+        //public async Task<IEnumerable<GroceryListItem>> GetCheckedItemsAsync(int groceryListId, int userId)
+        //{
+        //    using var connection = _connectionFactory.CreateConnection();
+        //    const string sql = @"
+        //        SELECT * FROM GroceryListItems
+        //        JOIN GroceryLists  ON GroceryLists.Id = GroceryListItems.GroceryListId
+        //        WHERE GroceryListItems.GroceryListId = @GroceryListId AND GroceryLists.UserId = @UserId AND GroceryListItems.IsChecked = 1";
+        //    return await connection.QueryAsync<GroceryListItem>(sql, new { GroceryListId = groceryListId, UserId = userId });
+        //}
+
         public async Task<IEnumerable<GroceryListItem>> GetCheckedItemsAsync(int groceryListId, int userId)
         {
             using var connection = _connectionFactory.CreateConnection();
             const string sql = @"
-                SELECT * FROM GroceryListItems
-                JOIN GroceryLists  ON GroceryLists.Id = GroceryListItems.GroceryListId
-                WHERE GroceryListItems.GroceryListId = @GroceryListId AND GroceryLists.UserId = @UserId AND GroceryListItems.IsChecked = 1";
+                    SELECT gli.Id, gli.GroceryListId, gli.ItemId, gli.QuantityNeeded, gli.IsChecked, gli.EstimatedPrice
+                    FROM GroceryListItems gli
+                    JOIN GroceryLists gl ON gl.Id = gli.GroceryListId
+                    WHERE gli.GroceryListId = @GroceryListId AND gl.UserId = @UserId AND gli.IsChecked = 1";
             return await connection.QueryAsync<GroceryListItem>(sql, new { GroceryListId = groceryListId, UserId = userId });
         }
-
         public async Task<int> CreateEmptyAsync(int userId, string? name)
         {
             using var connection = _connectionFactory.CreateConnection();
@@ -58,42 +68,42 @@ namespace InventoryApi.Repositories
             return await connection.QuerySingleAsync<int>(sql, new { UserId = userId, Name = name });
         }
 
-        public async Task<int> GenerateFromThresholdAsync(int userId)
-        {
-            using var connection = _connectionFactory.CreateConnection();
-            connection.Open();
-            using var dbTransaction = connection.BeginTransaction();
-            try
-            {
-                var listId = await connection.QuerySingleAsync<int>(@"
-                    INSERT INTO GroceryLists (UserId, Gr_Name, Status)
-                    OUTPUT INSERTED.Id
-                    VALUES (@UserId, 'Auto-generated', 'Active')",
-                    new { UserId = userId }, dbTransaction);
+        //public async Task<int> GenerateFromThresholdAsync(int userId)
+        //{
+        //    using var connection = _connectionFactory.CreateConnection();
+        //    connection.Open();
+        //    using var dbTransaction = connection.BeginTransaction();
+        //    try
+        //    {
+        //        var listId = await connection.QuerySingleAsync<int>(@"
+        //            INSERT INTO GroceryLists (UserId, Gr_Name, Status)
+        //            OUTPUT INSERTED.Id
+        //            VALUES (@UserId, 'Auto-generated', 'Active')",
+        //            new { UserId = userId }, dbTransaction);
 
-                var lowStockItems = await connection.QueryAsync<Item>(@"
-                    SELECT * FROM Items WHERE UserId = @UserId AND CurrentQuantity < Threshold",
-                    new { UserId = userId }, dbTransaction);
+        //        var lowStockItems = await connection.QueryAsync<Item>(@"
+        //            SELECT * FROM Items WHERE UserId = @UserId AND CurrentQuantity < Threshold",
+        //            new { UserId = userId }, dbTransaction);
 
-                foreach (var item in lowStockItems)
-                {
-                    await connection.ExecuteAsync(@"
-                        INSERT INTO GroceryListItems (GroceryListId, ItemId, QuantityNeeded, IsChecked)
-                        VALUES (@GroceryListId, @ItemId, @QuantityNeeded, 0)",
-                        new { GroceryListId = listId, ItemId = item.Id, QuantityNeeded = item.Threshold }, dbTransaction);
-                }
+        //        foreach (var item in lowStockItems)
+        //        {
+        //            await connection.ExecuteAsync(@"
+        //                INSERT INTO GroceryListItems (GroceryListId, ItemId, QuantityNeeded, IsChecked)
+        //                VALUES (@GroceryListId, @ItemId, @QuantityNeeded, 0)",
+        //                new { GroceryListId = listId, ItemId = item.Id, QuantityNeeded = item.Threshold }, dbTransaction);
+        //        }
 
-                dbTransaction.Commit();
-                return listId;
-            }
-            catch
-            {
-                dbTransaction.Rollback();
-                throw;
-            }
-        }
+        //        dbTransaction.Commit();
+        //        return listId;
+        //    }
+        //    catch
+        //    {
+        //        dbTransaction.Rollback();
+        //        throw;
+        //    }
+        //}
 
-        public async Task<int> AddItemAsync(int groceryListId, int userId, int itemId, decimal quantityNeeded)
+        public async Task<int> AddItemAsync(int groceryListId, int userId, int itemId, decimal quantityNeeded, decimal? estimatedPrice)
         {
             using var connection = _connectionFactory.CreateConnection();
             var list = await connection.QuerySingleOrDefaultAsync<GroceryList>(
@@ -103,10 +113,10 @@ namespace InventoryApi.Repositories
                 throw new ArgumentException("Grocery list not found.");
 
             const string sql = @"
-                INSERT INTO GroceryListItems (GroceryListId, ItemId, QuantityNeeded, IsChecked)
+                INSERT INTO GroceryListItems (GroceryListId, ItemId, QuantityNeeded, IsChecked, EstimatedPrice)
                 OUTPUT INSERTED.Id
-                VALUES (@GroceryListId, @ItemId, @QuantityNeeded, 0)";
-            return await connection.QuerySingleAsync<int>(sql, new { GroceryListId = groceryListId, ItemId = itemId, QuantityNeeded = quantityNeeded });
+                VALUES (@GroceryListId, @ItemId, @QuantityNeeded, 0, @EstimatedPrice)";
+            return await connection.QuerySingleAsync<int>(sql, new { GroceryListId = groceryListId, ItemId = itemId, QuantityNeeded = quantityNeeded, EstimatedPrice = estimatedPrice });
         }
 
         public async Task<bool> RemoveItemAsync(int groceryListItemId, int userId)
@@ -115,8 +125,22 @@ namespace InventoryApi.Repositories
             const string sql = @"
                 DELETE GroceryListItems FROM GroceryListItems 
                 JOIN GroceryLists  ON GroceryLists.Id = GroceryListItems.GroceryListId
+                WHERE GroceryListItems.Id = @GroceryListId AND GroceryLists.UserId = @UserId";
+            var rows = await connection.ExecuteAsync(sql, new { GroceryListId = groceryListItemId, UserId = userId });
+            return rows > 0;
+        }
+
+        public async Task<bool> UpdateItemAsync(int groceryListItemId, int userId, decimal? quantityNeeded, decimal? estimatedPrice)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            const string sql = @"
+                UPDATE GroceryListItems 
+                SET GroceryListItems.QuantityNeeded = COALESCE(@QuantityNeeded, GroceryListItems.QuantityNeeded),
+                    GroceryListItems.EstimatedPrice = COALESCE(@EstimatedPrice, GroceryListItems.EstimatedPrice)
+                FROM GroceryListItems 
+                JOIN GroceryLists ON GroceryLists.Id = GroceryListItems.GroceryListId
                 WHERE GroceryListItems.Id = @Id AND GroceryLists.UserId = @UserId";
-            var rows = await connection.ExecuteAsync(sql, new { Id = groceryListItemId, UserId = userId });
+            var rows = await connection.ExecuteAsync(sql, new { Id = groceryListItemId, UserId = userId, QuantityNeeded = quantityNeeded, EstimatedPrice = estimatedPrice });
             return rows > 0;
         }
 
@@ -138,6 +162,39 @@ namespace InventoryApi.Repositories
             const string sql = "UPDATE GroceryLists SET Status = @Status WHERE Id = @Id AND UserId = @UserId";
             var rows = await connection.ExecuteAsync(sql, new { Id = groceryListId, UserId = userId, Status = status });
             return rows > 0;
+        }
+
+        public async Task<bool> HasLinkedTransactionsAsync(int groceryListId)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            var count = await connection.QuerySingleAsync<int>(
+                "SELECT COUNT(*) FROM Transactions WHERE GroceryListId = @Id", new { Id = groceryListId });
+            return count > 0;
+        }
+
+        public async Task<bool> DeleteAsync(int groceryListId, int userId)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            connection.Open();
+            using var dbTransaction = connection.BeginTransaction();
+            try
+            {
+                await connection.ExecuteAsync(
+                    "DELETE FROM GroceryListItems WHERE GroceryListId = @Id",
+                    new { Id = groceryListId }, dbTransaction);
+
+                var rows = await connection.ExecuteAsync(
+                    "DELETE FROM GroceryLists WHERE Id = @Id AND UserId = @UserId",
+                    new { Id = groceryListId, UserId = userId }, dbTransaction);
+
+                dbTransaction.Commit();
+                return rows > 0;
+            }
+            catch
+            {
+                dbTransaction.Rollback();
+                throw;
+            }
         }
     }
 }

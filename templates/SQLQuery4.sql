@@ -28,3 +28,5 @@ WHERE BatchId IS NOT NULL;
 SELECT * FROM sys.indexes WHERE name = 'UQ_TransactionLines_ItemBatch_WhenSpecified';
 
 SELECT * FROM InventoryBatches
+
+ALTER TABLE GroceryListItems ADD EstimatedPrice DECIMAL(10,2) NULL;

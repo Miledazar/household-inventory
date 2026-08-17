@@ -51,8 +51,15 @@ namespace InventoryApi.Controllers
         [HttpPost("generate")]
         public async Task<IActionResult> GenerateFromThreshold()
         {
-            var id = await _service.GenerateFromThresholdAsync(userId: 1);
-            return Ok(new { id });
+            try
+            {
+                var id = await _service.GenerateFromThresholdAsync(userId: 1);
+                return Ok(new { id });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("{id}/items")]
@@ -62,6 +69,21 @@ namespace InventoryApi.Controllers
             {
                 var itemId = await _service.AddItemAsync(userId: 1, id, dto);
                 return Ok(new { id = itemId });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("items/{groceryListItemId}")]
+        public async Task<IActionResult> UpdateItem(int groceryListItemId, UpdateGroceryListItemDto dto)
+        {
+            try
+            {
+                var success = await _service.UpdateItemAsync(userId: 1, groceryListItemId, dto);
+                if (!success) return NotFound();
+                return NoContent();
             }
             catch (ArgumentException ex)
             {
@@ -105,6 +127,21 @@ namespace InventoryApi.Controllers
             var success = await _service.CloseListAsync(userId: 1, id);
             if (!success) return NotFound();
             return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var success = await _service.DeleteAsync(userId: 1, id);
+                if (!success) return NotFound();
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

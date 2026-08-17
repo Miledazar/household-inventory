@@ -8,6 +8,7 @@
             public DateTime Date { get; set; }
             public string? Notes { get; set; }
             public int? StoreId { get; set; }
+            public int? GroceryListId { get; set; }
             public List<CreateTransactionLineDto> Lines { get; set; } = new();
         }
 

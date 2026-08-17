@@ -49,10 +49,10 @@ namespace InventoryApi.Repositories
             try
             {
                 var transactionId = await connection.QuerySingleAsync<int>(@"
-                    INSERT INTO Transactions (UserId, Type, Date, Notes, StoreId)
+                    INSERT INTO Transactions (UserId, Type, Date, Notes, StoreId, GroceryListId)
                     OUTPUT INSERTED.Id
-                    VALUES (@UserId, @Type, @Date, @Notes, @StoreId)",
-                    new { UserId = userId, dto.Type, dto.Date, dto.Notes, dto.StoreId }, dbTransaction);
+                    VALUES (@UserId, @Type, @Date, @Notes, @StoreId, @GroceryListId)",
+                    new { UserId = userId, dto.Type, dto.Date, dto.Notes, dto.StoreId, dto.GroceryListId}, dbTransaction);
 
                 foreach (var plan in plans)
                 {
@@ -86,7 +86,6 @@ namespace InventoryApi.Repositories
                         }
                     }
 
-                    // Recalculate CurrentQuantity from batches, inside the same atomic transaction
                     await connection.ExecuteAsync(@"
                         UPDATE Items 
                         SET CurrentQuantity = (SELECT ISNULL(SUM(RemainingQuantity), 0) FROM InventoryBatches WHERE ItemId = @ItemId)
