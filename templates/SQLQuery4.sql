@@ -30,3 +30,8 @@ SELECT * FROM sys.indexes WHERE name = 'UQ_TransactionLines_ItemBatch_WhenSpecif
 SELECT * FROM InventoryBatches
 
 ALTER TABLE GroceryListItems ADD EstimatedPrice DECIMAL(10,2) NULL;
+
+ALTER TABLE Items ADD CONSTRAINT DF_Items_Flag DEFAULT 0 FOR Flag;
+ALTER TABLE Items ADD IsActive BIT NOT NULL DEFAULT 1;
+
+ALTER TABLE Transactions ADD GroceryListId INT NULL FOREIGN KEY REFERENCES GroceryLists(Id);

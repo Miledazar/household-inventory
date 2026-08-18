@@ -34,7 +34,7 @@ namespace InventoryApi.Repositories
             const string sql = @"
                 INSERT INTO Users (Us_Name, PasswordHash)
                 OUTPUT INSERTED.Id
-                VALUES (@Name, @PasswordHash)";
+                VALUES (@Us_Name, @PasswordHash)";
             return await connection.QuerySingleAsync<int>(sql, user);
         }
     }

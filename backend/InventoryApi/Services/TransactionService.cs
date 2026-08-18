@@ -9,12 +9,14 @@ namespace InventoryApi.Services
     {
         private readonly ITransactionRepository _transactionRepository;
         private readonly IInventoryBatchRepository _batchRepository;
+        private readonly GroceryListService _groceryListService;
         private static readonly string[] ValidTypes = { "Purchase", "Consumption", "Adjustment", "Wasted" };
 
-        public TransactionService(ITransactionRepository transactionRepository, IInventoryBatchRepository batchRepository)
+        public TransactionService(ITransactionRepository transactionRepository, IInventoryBatchRepository batchRepository, GroceryListService groceryListService)
         {
             _transactionRepository = transactionRepository;
             _batchRepository = batchRepository;
+            _groceryListService = groceryListService;
         }
 
         public async Task<int> CreateTransactionAsync(int userId, CreateTransactionDto dto)
@@ -102,7 +104,14 @@ namespace InventoryApi.Services
                 plans.Add(plan);
             }
 
-            return await _transactionRepository.CreateWithLinesAsync(userId, dto, plans);
+            var transactionId = await _transactionRepository.CreateWithLinesAsync(userId, dto, plans);
+
+            if (dto.GroceryListId.HasValue)
+            {
+                await _groceryListService.CleanupAfterPurchaseAsync(userId, dto.GroceryListId.Value);
+            }
+
+            return transactionId;
         }
     }
 }

@@ -9,13 +9,12 @@ namespace InventoryApi.Services
     {
         private readonly IGroceryListRepository _groceryListRepository;
         private readonly IItemRepository _itemRepository;
-        private readonly TransactionService _transactionService;
+   
 
-        public GroceryListService(IGroceryListRepository groceryListRepository, IItemRepository itemRepository, TransactionService transactionService)
+        public GroceryListService(IGroceryListRepository groceryListRepository, IItemRepository itemRepository)
         {
             _groceryListRepository = groceryListRepository;
             _itemRepository = itemRepository;
-            _transactionService = transactionService;
         }
 
         public async Task<int> CreateEmptyAsync(int userId, CreateGroceryListDto dto)
@@ -77,18 +76,18 @@ namespace InventoryApi.Services
             return await _groceryListRepository.SetCheckedAsync(groceryListItemId, userId, isChecked);
         }
 
-        public async Task<int> FinishShoppingAsync(int userId, int groceryListId, int? storeId)
+        public async Task<CreateTransactionDto> PrepareTransactionFromListAsync(int userId, int groceryListId, int? storeId)
         {
             var list = await _groceryListRepository.GetByIdAsync(groceryListId, userId) ?? throw new ArgumentException("Grocery list not found");
 
             var checkedItems = (await _groceryListRepository.GetCheckedItemsAsync(groceryListId, userId)).ToList();
-            if(checkedItems.Count == 0)
+            if (checkedItems.Count == 0)
             {
                 throw new ArgumentException("No items checked — nothing to purchase.");
             }
-            if(checkedItems.Any(i => i.EstimatedPrice == null))
+            if (checkedItems.Any(i => i.EstimatedPrice == null))
             {
-                throw new ArgumentException("All checked items must have a price before finishing shopping.");
+                throw new ArgumentException("All checked items must have a price before creating a transaction.");
             }
 
             var transactionDto = new CreateTransactionDto
@@ -106,7 +105,12 @@ namespace InventoryApi.Services
                 }).ToList()
             };
 
-            var transactionId = await _transactionService.CreateTransactionAsync(userId, transactionDto);
+            return transactionDto;
+        }
+
+        public async Task CleanupAfterPurchaseAsync(int userId, int groceryListId)
+        {
+            var checkedItems = (await _groceryListRepository.GetCheckedItemsAsync(groceryListId, userId)).ToList();
 
             foreach (var item in checkedItems)
             {
@@ -120,10 +124,55 @@ namespace InventoryApi.Services
             {
                 await _groceryListRepository.SetStatusAsync(groceryListId, userId, "Completed");
             }
-
-            return transactionId;
         }
-      
+
+        //public async Task<int> FinishShoppingAsync(int userId, int groceryListId, int? storeId)
+        //{
+        //    var list = await _groceryListRepository.GetByIdAsync(groceryListId, userId) ?? throw new ArgumentException("Grocery list not found");
+
+        //    var checkedItems = (await _groceryListRepository.GetCheckedItemsAsync(groceryListId, userId)).ToList();
+        //    if(checkedItems.Count == 0)
+        //    {
+        //        throw new ArgumentException("No items checked — nothing to purchase.");
+        //    }
+        //    if(checkedItems.Any(i => i.EstimatedPrice == null))
+        //    {
+        //        throw new ArgumentException("All checked items must have a price before finishing shopping.");
+        //    }
+
+        //    var transactionDto = new CreateTransactionDto
+        //    {
+        //        Type = "Purchase",
+        //        Date = DateTime.UtcNow,
+        //        Notes = $"From grocery list: {list.Gr_Name}",
+        //        StoreId = storeId,
+        //        GroceryListId = groceryListId,
+        //        Lines = checkedItems.Select(i => new CreateTransactionLineDto
+        //        {
+        //            ItemId = i.ItemId,
+        //            Quantity = i.QuantityNeeded,
+        //            UnitPrice = i.EstimatedPrice
+        //        }).ToList()
+        //    };
+
+        //    var transactionId = await _transactionService.CreateTransactionAsync(userId, transactionDto);
+
+        //    foreach (var item in checkedItems)
+        //    {
+        //        var removed = await _groceryListRepository.RemoveItemAsync(item.Id, userId);
+        //        if (!removed)
+        //            throw new InvalidOperationException($"Failed to remove grocery list item {item.Id} after purchase — data may be inconsistent.");
+        //    }
+
+        //    var remainingItems = await _groceryListRepository.GetItemsAsync(groceryListId, userId);
+        //    if (!remainingItems.Any())
+        //    {
+        //        await _groceryListRepository.SetStatusAsync(groceryListId, userId, "Completed");
+        //    }
+
+        //    return transactionId;
+        //}
+
         public async Task<bool> CloseListAsync(int userId, int groceryListId)
         {
             return await _groceryListRepository.SetStatusAsync(groceryListId, userId, "Completed");

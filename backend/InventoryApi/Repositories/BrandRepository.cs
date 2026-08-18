@@ -53,5 +53,13 @@ namespace InventoryApi.Repositories
             var rows = await connection.ExecuteAsync(sql, new { Id = id, UserId = userId });
             return rows > 0;
         }
+
+        public async Task<bool> HasReferencesAsync(int brandId, int userId)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            const string sql = "SELECT COUNT(*) FROM Items WHERE BrandId = @Id AND UserId = @UserId";
+            var count = await connection.QuerySingleAsync<int>(sql, new { Id = brandId, UserId = userId });
+            return count > 0;
+        }
     }
 }

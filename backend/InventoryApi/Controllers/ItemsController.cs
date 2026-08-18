@@ -2,13 +2,15 @@
 using InventoryApi.Models;
 using InventoryApi.Models.Dtos;
 using InventoryApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class ItemsController : ControllerBase
+    public class ItemsController : ApiControllerBase
     {
         private readonly IItemRepository _repository;
         private readonly IInventoryBatchRepository _batchRepository;
@@ -25,14 +27,14 @@ namespace InventoryApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] string filter = "active")
         {
-            var items = await _repository.GetAllAsync(userId: 1, filter);
+            var items = await _repository.GetAllAsync(userId: CurrentUserId, filter);
             return Ok(items);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var item = await _repository.GetByIdAsync(id, userId: 1);
+            var item = await _repository.GetByIdAsync(id, userId: CurrentUserId);
             if (item == null) return NotFound();
             return Ok(item);
         }
@@ -40,14 +42,14 @@ namespace InventoryApi.Controllers
         [HttpGet("low-stock")]
         public async Task<IActionResult> GetLowStock()
         {
-            var items = await _repository.GetLowStockAsync(userId: 1);
+            var items = await _repository.GetLowStockAsync(userId: CurrentUserId);
             return Ok(items);
         }
 
         [HttpGet("{id}/last-price")]
         public async Task<IActionResult> GetLastPrice(int id)
         {
-            var price = await _repository.GetLastPriceAsync(id, userId: 1);
+            var price = await _repository.GetLastPriceAsync(id, userId: CurrentUserId);
             return Ok(new { price });
         }
 
@@ -56,7 +58,7 @@ namespace InventoryApi.Controllers
         {
             try
             {
-                var id = await _itemService.CreateAsync(userId: 1, dto);
+                var id = await _itemService.CreateAsync(userId: CurrentUserId, dto);
                 return Ok(new { id });
             }
             catch (ArgumentException ex)
@@ -70,7 +72,7 @@ namespace InventoryApi.Controllers
         {
             try
             {
-                var success = await _itemService.UpdateAsync(userId: 1, id, dto);
+                var success = await _itemService.UpdateAsync(userId: CurrentUserId, id, dto);
                 if (!success) return NotFound();
                 return NoContent();
             }
@@ -85,7 +87,7 @@ namespace InventoryApi.Controllers
         {
             try
             {
-                var success = await _itemService.DeleteAsync(userId: 1, id);
+                var success = await _itemService.DeleteAsync(userId: CurrentUserId, id);
                 if (!success) return NotFound();
                 return NoContent();
             }
@@ -98,7 +100,7 @@ namespace InventoryApi.Controllers
         [HttpPatch("{id}/archive")]
         public async Task<IActionResult> SetArchived(int id, [FromBody] bool isArchived)
         {
-            var success = await _itemService.SetArchivedAsync(userId: 1, id, isArchived);
+            var success = await _itemService.SetArchivedAsync(userId: CurrentUserId, id, isArchived);
             if (!success) return NotFound();
             return NoContent();
         }
@@ -106,7 +108,7 @@ namespace InventoryApi.Controllers
         [HttpGet("{id}/batches")]
         public async Task<IActionResult> GetBatches(int id)
         {
-            var batches = await _batchRepository.GetByItemIdAsync(id, userId: 1);
+            var batches = await _batchRepository.GetByItemIdAsync(id, userId: CurrentUserId);
             return Ok(batches);
         }
     }

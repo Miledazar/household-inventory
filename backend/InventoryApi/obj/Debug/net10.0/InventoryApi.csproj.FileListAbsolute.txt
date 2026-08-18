@@ -69,3 +69,5 @@ C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\bin\D
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
+C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\bin\Debug\net10.0\BCrypt-Net-Next.dll
+C:\Users\miled\Documents\Projects\household-inventory\backend\InventoryApi\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

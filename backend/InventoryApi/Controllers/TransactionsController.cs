@@ -1,14 +1,16 @@
 ﻿using InventoryApi.Interfaces;
 using InventoryApi.Models.Dtos;
 using InventoryApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static InventoryApi.Models.Dtos.TransactionDtos;
 
 namespace InventoryApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class TransactionsController : ControllerBase
+    public class TransactionsController : ApiControllerBase
     {
         private readonly ITransactionRepository _repository;
         private readonly TransactionService _transactionService;
@@ -22,14 +24,14 @@ namespace InventoryApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var transactions = await _repository.GetAllAsync(userId: 1);
+            var transactions = await _repository.GetAllAsync(userId: CurrentUserId);
             return Ok(transactions);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var transaction = await _repository.GetByIdAsync(id, userId: 1);
+            var transaction = await _repository.GetByIdAsync(id, userId: CurrentUserId);
             if (transaction == null) return NotFound();
             return Ok(transaction);
         }
@@ -37,7 +39,7 @@ namespace InventoryApi.Controllers
         [HttpGet("{id}/lines")]
         public async Task<IActionResult> GetLines(int id)
         {
-            var lines = await _repository.GetLinesAsync(id, userId: 1);
+            var lines = await _repository.GetLinesAsync(id, userId: CurrentUserId);
             return Ok(lines);
         }
 
@@ -46,7 +48,7 @@ namespace InventoryApi.Controllers
         {
             try
             {
-                var id = await _transactionService.CreateTransactionAsync(userId: 1, dto);
+                var id = await _transactionService.CreateTransactionAsync(userId: CurrentUserId, dto);
                 return Ok(new { id });
             }
             catch (ArgumentException ex)

@@ -9,5 +9,6 @@ namespace InventoryApi.Interfaces
         Task<int> CreateAsync(Brand brand);
         Task<bool> UpdateAsync(Brand brand);
         Task<bool> DeleteAsync(int id, int userId);
+        Task<bool> HasReferencesAsync(int brandId, int userId);
     }
 }

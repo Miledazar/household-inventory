@@ -38,6 +38,7 @@ namespace InventoryApi.Repositories
             return await connection.QuerySingleAsync<int>(sql, category);
         }
 
+
         public async Task<bool> UpdateAsync(Category category)
         {
             using var connection = _connectionFactory.CreateConnection();
@@ -54,6 +55,14 @@ namespace InventoryApi.Repositories
             const string sql = "DELETE FROM Categories WHERE Id = @Id AND UserId = @UserId";
             var rows = await connection.ExecuteAsync(sql, new { Id = id, UserId = userId });
             return rows > 0;
+        }
+
+        public async Task<bool> HasReferencesAsync(int categoryId, int userId)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            const string sql = @"SELECT COUNT(*) FROM Items WHERE CategoryId = @Id AND UserId= @UserId";
+            var count = await connection.QuerySingleAsync<int>(sql, new { Id = categoryId, UserId = userId });
+            return count > 0;
         }
     }
 }
