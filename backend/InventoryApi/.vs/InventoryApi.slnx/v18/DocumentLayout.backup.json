@@ -3,20 +3,44 @@
   "WorkspaceRootPath": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\services\\userinitializationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:services\\userinitializationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\models\\dtos\\categorydtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:models\\dtos\\categorydtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\repositories\\categoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:repositories\\categoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\interfaces\\icategoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:interfaces\\icategoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\services\\userinitializationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:services\\userinitializationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\controllers\\transactionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -35,14 +59,6 @@
       "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:controllers\\grocerylistscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|c:\\users\\miled\\documents\\projects\\household-inventory\\backend\\inventoryapi\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EBC9B474-23B9-E98B-6888-1A8B6A117175}|InventoryApi.csproj|solutionrelative:repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -54,11 +70,63 @@
       "DocumentGroups": [
         {
           "DockedWidth": 307,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ICategoryRepository.cs",
+              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Interfaces\\ICategoryRepository.cs",
+              "RelativeDocumentMoniker": "Interfaces\\ICategoryRepository.cs",
+              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Interfaces\\ICategoryRepository.cs",
+              "RelativeToolTip": "Interfaces\\ICategoryRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-20T12:52:38.425Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "CategoryService.cs",
+              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Services\\CategoryService.cs",
+              "RelativeDocumentMoniker": "Services\\CategoryService.cs",
+              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Services\\CategoryService.cs",
+              "RelativeToolTip": "Services\\CategoryService.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAUwBQAAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-20T11:16:23.28Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CategoryDtos.cs",
+              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Models\\Dtos\\CategoryDtos.cs",
+              "RelativeDocumentMoniker": "Models\\Dtos\\CategoryDtos.cs",
+              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Models\\Dtos\\CategoryDtos.cs",
+              "RelativeToolTip": "Models\\Dtos\\CategoryDtos.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAA8wAsAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-20T11:15:37.558Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CategoryRepository.cs",
+              "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Repositories\\CategoryRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\CategoryRepository.cs",
+              "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Repositories\\CategoryRepository.cs",
+              "RelativeToolTip": "Repositories\\CategoryRepository.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAUwCgAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-20T11:14:06.461Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "TokenService.cs",
               "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Services\\TokenService.cs",
               "RelativeDocumentMoniker": "Services\\TokenService.cs",
@@ -66,12 +134,11 @@
               "RelativeToolTip": "Services\\TokenService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-18T12:52:41.412Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-18T12:52:41.412Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 10,
               "Title": "TransactionsController.cs",
               "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\TransactionsController.cs",
               "RelativeDocumentMoniker": "Controllers\\TransactionsController.cs",
@@ -79,12 +146,11 @@
               "RelativeToolTip": "Controllers\\TransactionsController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-18T12:29:11.911Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-18T12:29:11.911Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 11,
               "Title": "StoresController.cs",
               "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\StoresController.cs",
               "RelativeDocumentMoniker": "Controllers\\StoresController.cs",
@@ -92,12 +158,11 @@
               "RelativeToolTip": "Controllers\\StoresController.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAqwCMAAABQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-18T12:29:07.22Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-18T12:29:07.22Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 12,
               "Title": "ItemsController.cs",
               "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\ItemsController.cs",
               "RelativeDocumentMoniker": "Controllers\\ItemsController.cs",
@@ -105,12 +170,11 @@
               "RelativeToolTip": "Controllers\\ItemsController.cs",
               "ViewState": "AgIAAGYAAAAAAAAAAAAiwG4AAABbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-18T12:29:03.24Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-18T12:29:03.24Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 13,
               "Title": "GroceryListsController.cs",
               "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\GroceryListsController.cs",
               "RelativeDocumentMoniker": "Controllers\\GroceryListsController.cs",
@@ -118,25 +182,23 @@
               "RelativeToolTip": "Controllers\\GroceryListsController.cs",
               "ViewState": "AgIAAH8AAAAAAAAAAAAgwIoAAABOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-18T12:28:58.26Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-18T12:28:58.26Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 5,
               "Title": "BrandsController.cs",
               "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\BrandsController.cs",
               "RelativeDocumentMoniker": "Controllers\\BrandsController.cs",
               "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\BrandsController.cs",
               "RelativeToolTip": "Controllers\\BrandsController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAABMAAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwBsAAABMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-18T12:28:18.461Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-18T12:28:18.461Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "UserRepository.cs",
               "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Repositories\\UserRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\UserRepository.cs",
@@ -144,60 +206,56 @@
               "RelativeToolTip": "Repositories\\UserRepository.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAAgwCQAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-18T10:36:39.379Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-18T10:36:39.379Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 0,
               "Title": "CategoriesController.cs",
               "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\CategoriesController.cs",
               "RelativeDocumentMoniker": "Controllers\\CategoriesController.cs",
               "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\CategoriesController.cs",
               "RelativeToolTip": "Controllers\\CategoriesController.cs",
-              "ViewState": "AgIAACwAAAAAAAAAAAAswDoAAABOAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAowDAAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-18T10:32:11.899Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Controllers\\AuthController.cs",
               "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAAlwC8AAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAowDYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-18T10:12:35.615Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-18T10:12:35.615Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 8,
               "Title": "UserInitializationService.cs",
               "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Services\\UserInitializationService.cs",
               "RelativeDocumentMoniker": "Services\\UserInitializationService.cs",
               "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Services\\UserInitializationService.cs",
               "RelativeToolTip": "Services\\UserInitializationService.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAuwBQAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwBQAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-18T06:58:18.498Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-18T06:58:18.498Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\miled\\Documents\\Projects\\household-inventory\\backend\\InventoryApi\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAEAAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-12T10:00:19.947Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-12T10:00:19.947Z"
             }
           ]
         },

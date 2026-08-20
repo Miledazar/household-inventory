@@ -2,13 +2,13 @@
 {
     public class CreateCategoryDto
     {
-        public string Name { get; set; } = string.Empty;
-        public string? Description { get; set; }
+        public string cat_Name { get; set; } = string.Empty;
+        public string? cat_Description { get; set; }
     }
 
     public class UpdateCategoryDto
     {
-        public string Name { get; set; } = string.Empty;
-        public string? Description { get; set; }
+        public string cat_Name { get; set; } = string.Empty;
+        public string? cat_Description { get; set; }
     }
 }

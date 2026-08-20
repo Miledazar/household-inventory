@@ -39,8 +39,15 @@ namespace InventoryApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateCategoryDto dto)
         {
+            try { 
             var id = await _service.CreateAsync(userId: CurrentUserId, dto);
             return Ok(new { id });
+            }
+            catch (ArgumentException ex)
+            {
+             
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]

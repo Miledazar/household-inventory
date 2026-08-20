@@ -38,6 +38,19 @@ namespace InventoryApi.Repositories
             return await connection.QuerySingleAsync<int>(sql, category);
         }
 
+        public async Task<bool> ExistsAsync(int userId, string normalizedCategoryName)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            const string sql = @"
+            SELECT CAST(COUNT(1) AS BIT) 
+            FROM Categories 
+            WHERE UserId = @UserId 
+              AND LOWER(TRIM(Cat_Name)) = @CategoryName";
+
+            return await connection.ExecuteScalarAsync<bool>(sql, new { UserId = userId, CategoryName = normalizedCategoryName });
+        }
+
 
         public async Task<bool> UpdateAsync(Category category)
         {

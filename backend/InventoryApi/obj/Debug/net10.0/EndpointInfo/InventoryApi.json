@@ -1118,11 +1118,11 @@
       "CreateCategoryDto": {
         "type": "object",
         "properties": {
-          "name": {
+          "cat_Name": {
             "type": "string",
             "nullable": true
           },
-          "description": {
+          "cat_Description": {
             "type": "string",
             "nullable": true
           }
@@ -1288,11 +1288,11 @@
       "UpdateCategoryDto": {
         "type": "object",
         "properties": {
-          "name": {
+          "cat_Name": {
             "type": "string",
             "nullable": true
           },
-          "description": {
+          "cat_Description": {
             "type": "string",
             "nullable": true
           }

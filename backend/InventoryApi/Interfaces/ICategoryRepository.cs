@@ -10,7 +10,6 @@ namespace InventoryApi.Interfaces
         Task<bool> UpdateAsync(Category category);
         Task<bool> DeleteAsync(int id, int userId);
         Task<bool> HasReferencesAsync(int categoryId, int userId);
-
-
+        Task<bool> ExistsAsync(int userId, string normalizedCategoryName);
     }
 }

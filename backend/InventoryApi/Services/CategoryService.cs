@@ -16,11 +16,25 @@ namespace InventoryApi.Services
 
         public async Task<int> CreateAsync(int userId, CreateCategoryDto dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.cat_Name))
+            {
+                throw new ArgumentException("Category name cannot be empty.");
+            }
+
+            var normalizedName = dto.cat_Name.Trim().ToLower();
+
+            bool exists = await _repository.ExistsAsync(userId, normalizedName);
+
+            if (exists)
+            {
+                throw new InvalidOperationException("A category with this name already exists.");
+            }
+
             var category = new Category
             {
                 UserId = userId,
-                Cat_Name = dto.Name,
-                Cat_Description = dto.Description
+                Cat_Name = dto.cat_Name,
+                Cat_Description = dto.cat_Description
             };
             return await _repository.CreateAsync(category);
         }
@@ -31,8 +45,8 @@ namespace InventoryApi.Services
             {
                 Id = id,
                 UserId = userId,
-                Cat_Name = dto.Name,
-                Cat_Description = dto.Description
+                Cat_Name = dto.cat_Name,
+                Cat_Description = dto.cat_Description
             };
             return await _repository.UpdateAsync(category);
         }

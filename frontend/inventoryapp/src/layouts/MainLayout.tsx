@@ -87,7 +87,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -150,11 +150,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-interface MainLayoutProps {
-  children: React.ReactNode;
-}
 
-export default function PersistentDrawerLeft({children}:MainLayoutProps) {
+
+export default function PersistentDrawerLeft() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
@@ -233,7 +231,7 @@ export default function PersistentDrawerLeft({children}:MainLayoutProps) {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        {children}
+        <Outlet/>
       </Main>
     </Box>
   );
