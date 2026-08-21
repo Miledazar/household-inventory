@@ -44,8 +44,7 @@ namespace InventoryApi.Controllers
             return Ok(new { id });
             }
             catch (ArgumentException ex)
-            {
-             
+            {        
                 return BadRequest(ex.Message);
             }
         }
@@ -53,9 +52,16 @@ namespace InventoryApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateCategoryDto dto)
         {
+            try
+            {
             var success = await _service.UpdateAsync(userId: CurrentUserId, id, dto);
             if (!success) return NotFound();
             return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]

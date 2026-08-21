@@ -1,6 +1,6 @@
 import apiClient from '@/api/client';
 import type Category from '@/interfaces/ICategories';
-import { Alert, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material';
+import { Alert, Button, CircularProgress,IconButton } from '@mui/material';
 import Box from '@mui/material/Box';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
@@ -8,6 +8,10 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import { useSnackbar } from '@/context/SnackBarContext';
+import FormDialog from '@/components/Dialog/FormDialog';
+import axios from 'axios';
+import CategoryFormFields from '@/components/Dialog/CategoryFormFields';
 
 
 
@@ -20,12 +24,28 @@ export default function Categories() {
 
 
   const [open, setOpen] = useState(false);
+  const {showError, showSuccess} = useSnackbar();
 
-  // 2. State for the form inputs
+  // Create State
   const [catName, setCatName] = useState('');
   const [catDescription, setCatDescription] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
+  //View State
+  const [viewOpen, setViewOpen] = useState(false);
+  const[viewCategory, setViewCategory] = useState<Category|null>(null);
+
+  //Edit State
+  const [editOpen, setEditOpen] = useState(false);
+  const [editId, setEditId] = useState<number|null>(null);
+  const [editName, setEditName] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [editLoading, setEditLoading] = useState(false);
+
+  // Delete State
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [selectedDeleteId, setSelectedDeleteId] = useState<number | null>(null);
 
   useEffect(() => {
     apiClient.get('/categories')
@@ -86,12 +106,12 @@ export default function Categories() {
 
 ];
 
-  const handleView = (id: number) => {console.log(id)};
-  const handleEdit = (id: number) => {console.log(id)};
-  const handleDelete = (id: number) => {console.log(id)};
+
+ 
    
 
 
+  // create category
   const handleOpen = () => setOpen(true);
 
   const handleClose = () => {
@@ -101,16 +121,13 @@ export default function Categories() {
   };
 
 
-  const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     if (!catName.trim()) {
-    setErrorMessage('Category name cannot be empty.');
+    showError('Category name cannot be empty.');
     return;
   }
 
     setLoading(true);
-    setErrorMessage('');
     
    try {
     const response = await apiClient.post('/categories', { 
@@ -126,18 +143,105 @@ export default function Categories() {
 
     setCategories((prevCategories) => [...prevCategories, newCategory]);
 
+    showSuccess('Category created succesfully.');
     handleClose(); 
 
-  } catch (error: any) {
+  } catch (error: unknown) {
    
-    console.error('Failed to create category:', error);
-    const message = error.response?.data?.message || 'Failed to save category. Please try again.';
-    setErrorMessage(message);
+    const message = axios.isAxiosError(error)
+    ? error.response?.data?.message ?? 'Failed to save category. Please try again.'
+    : 'Failed to save category. Please try again.';
+    showError(message);
 
   } finally {
     setLoading(false);
   }
   };
+
+  //view category
+  const handleView = (id: number) => {
+    const category = categories.find((c) => c.id === id);
+    if(category) {
+      setViewCategory(category);
+      setViewOpen(true);
+    }
+  };
+
+  const handleCloseView = () => {
+    setViewOpen(false);
+    setViewCategory(null);
+  };
+ 
+  //edit category
+  const handleEdit = (id: number) => {
+    const category = categories.find((c) => c.id === id);
+    if(category){
+      setEditId(id);
+      setEditName(category.cat_Name);
+      setEditDescription(category.cat_Description ?? '');
+      setEditOpen(true);
+    }
+  };
+
+  const handleCloseEdit = () => {
+    setEditOpen(false);
+    setEditId(null);
+    setEditName('');
+    setEditDescription('');
+  }
+
+  const handleEditSubmit = async () => {
+    if(editId === null) return;
+    setEditLoading(true);
+
+    try{
+      await apiClient.put(`categories/${editId}`, {
+        cat_Name: editName,
+        cat_Description: editDescription
+      });
+
+      setCategories((prev) => prev.map((c) => c.id === editId ? {...c, cat_Name : editName, cat_Description: editDescription} : c))
+      showSuccess('Category updated succesfully');
+      handleCloseEdit();
+    }catch(error: unknown){
+      const message = axios.isAxiosError(error) ?
+      error.response?.data?.message ?? 'Failed to update category' : 'Failed to update category';
+      showError(message);
+
+    }finally{
+      setEditLoading(false);
+    }
+  }
+  // delete category
+   const handleDelete = (id: number) => {
+    setSelectedDeleteId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog= () =>{
+    setSelectedDeleteId(null);
+    setDeleteDialogOpen(false);
+  }
+
+  const confirmDelete = async () => {
+    if(selectedDeleteId === null) return;
+
+    setIsDeleting(true);
+
+    try{
+      await apiClient.delete(`categories/${selectedDeleteId}`);
+      setCategories((prev) => prev.filter((cat) => cat.id != selectedDeleteId));
+      showSuccess('Category deleted succesfully');
+      handleCloseDeleteDialog();
+    }catch(error: unknown){
+      const message = axios.isAxiosError(error)
+      ? error.response?.data?.message ?? 'Failed to save category. Please try again.'
+      : 'Failed to save category. Please try again.';
+      showError(message);
+    }finally{
+      setIsDeleting(false);
+    }
+  }
   return (
     <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
@@ -161,54 +265,31 @@ export default function Categories() {
             },
           },
         }}
-        pageSizeOptions={[5]}
+        pageSizeOptions={[10]}
         disableRowSelectionOnClick
       />
       </Box>
 
-      {/* Dialog */}
+      {/* Create Dialog */}     
+      <FormDialog open={open} onClose={handleClose} title='Add New Category' submitLabel='Save' onSubmit={handleSubmit} isSubmitting={loading}>
+        <CategoryFormFields name={catName} description={catDescription} onNameChange={setCatName} onDescriptionChange={setCatDescription}/>
+      </FormDialog>
+    
+      {/* View Dialog */}
+      <FormDialog open={viewOpen} onClose={handleCloseView} title='View Category' submitLabel='Close' onSubmit={handleCloseView} isViewOnly>
+        <CategoryFormFields name={viewCategory?.cat_Name ?? ''} description={viewCategory?.cat_Description ?? ''} onNameChange={() => {}} onDescriptionChange={() => {}} readOnly/>
+      </FormDialog>
 
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <form onSubmit={handleSubmit}>
-          <DialogTitle>Add New Category</DialogTitle>
-          <DialogContent>
-            {errorMessage && (
-                <Alert severity="error" sx={{ mb: 2 }}>
-                    {errorMessage}
-                </Alert>
-                )}
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Category Name"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={catName}
-              onChange={(e) => setCatName(e.target.value)}
-              required
-              sx={{ mb: 2, mt: 1 }}
-            />
-            <TextField
-              margin="dense"
-              label="Description"
-              type="text"
-              fullWidth
-              variant="outlined"
-              multiline
-              rows={3}
-              value={catDescription}
-              onChange={(e) => setCatDescription(e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="inherit">Cancel</Button>
-            <Button type="submit" variant="contained" disabled={loading}>
-                {loading ? 'Saving...' : 'Save'}
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+      {/* Edit Dialog */}
+      <FormDialog open={editOpen} onClose={handleCloseEdit} title='Edit Category' submitLabel='Update' onSubmit={handleEditSubmit} isSubmitting={editLoading}>
+        <CategoryFormFields name={editName} description={editDescription} onNameChange={setEditName} onDescriptionChange={setEditDescription}/>
+      </FormDialog>
+
+      {/* delete dialog */}
+      <FormDialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog} title='Confirm Delete' submitLabel='Delete' onSubmit={confirmDelete} isSubmitting={isDeleting}>
+         Are you sure you want to delete this category? This action cannot be undone.
+      </FormDialog>
+      
     </Box>
   );
 }

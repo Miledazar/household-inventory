@@ -41,14 +41,34 @@ namespace InventoryApi.Services
 
         public async Task<bool> UpdateAsync(int userId, int id, UpdateCategoryDto dto)
         {
-            var category = new Category
+            if (string.IsNullOrWhiteSpace(dto.cat_Name))
             {
-                Id = id,
-                UserId = userId,
-                Cat_Name = dto.cat_Name,
-                Cat_Description = dto.cat_Description
-            };
-            return await _repository.UpdateAsync(category);
+                throw new ArgumentException("Category name cannot be empty.");
+            }
+
+            var existingCategory = await _repository.GetByIdAsync(id, userId);
+            if (existingCategory == null)
+            {
+                throw new KeyNotFoundException("Category not found.");
+            }
+
+            var newNormalizedName = dto.cat_Name.Trim().ToLower();
+            var currentNormalizedName = existingCategory.Cat_Name.Trim().ToLower();
+
+            if (newNormalizedName != currentNormalizedName)
+            {
+                bool exists = await _repository.ExistsAsync(userId, newNormalizedName);
+
+                if (exists)
+                {
+                    throw new InvalidOperationException("A category with this name already exists.");
+                }
+            }
+
+            existingCategory.Cat_Name = dto.cat_Name;
+            existingCategory.Cat_Description = dto.cat_Description;
+
+            return await _repository.UpdateAsync(existingCategory);
         }
         public async Task<bool> DeleteAsync(int userId, int id)
         {
