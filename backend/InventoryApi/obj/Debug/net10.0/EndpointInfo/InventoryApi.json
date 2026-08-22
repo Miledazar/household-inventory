@@ -1108,7 +1108,7 @@
       "CreateBrandDto": {
         "type": "object",
         "properties": {
-          "name": {
+          "br_Name": {
             "type": "string",
             "nullable": true
           }
@@ -1278,7 +1278,7 @@
       "UpdateBrandDto": {
         "type": "object",
         "properties": {
-          "name": {
+          "br_Name": {
             "type": "string",
             "nullable": true
           }

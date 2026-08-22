@@ -1,5 +1,5 @@
 import apiClient from '@/api/client';
-import type Category from '@/interfaces/ICategories';
+import type Category from '@/interfaces/ICategorie';
 import { Alert, Button, CircularProgress,IconButton } from '@mui/material';
 import Box from '@mui/material/Box';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -8,7 +8,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { useSnackbar } from '@/context/SnackBarContext';
+import { useSnackbar } from '@/context/SnackbarContext';
 import FormDialog from '@/components/Dialog/FormDialog';
 import axios from 'axios';
 import CategoryFormFields from '@/components/Dialog/CategoryFormFields';

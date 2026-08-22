@@ -18,7 +18,7 @@ namespace InventoryApi.Services
             var brand = new Brand
             {
                 UserId = userId,
-                Br_Name = dto.Name
+                Br_Name = dto.br_Name
             };
             return await _repository.CreateAsync(brand);
         }
@@ -29,7 +29,7 @@ namespace InventoryApi.Services
             {
                 Id = id,
                 UserId = userId,
-                Br_Name = dto.Name
+                Br_Name = dto.br_Name
             };
             return await _repository.UpdateAsync(brand);
         }

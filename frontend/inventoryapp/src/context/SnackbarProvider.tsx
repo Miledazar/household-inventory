@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { Snackbar, Alert } from '@mui/material';
-import { SnackbarContext } from './SnackBarContext';
+import { SnackbarContext } from './SnackbarContext';
 
 export function SnackbarProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
