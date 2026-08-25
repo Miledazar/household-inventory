@@ -40,16 +40,36 @@ namespace InventoryApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateBrandDto dto)
         {
+            try {
             var id = await _service.CreateAsync(userId: CurrentUserId, dto);
-            return Ok(new { id });
+            return Ok(new { id }); 
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateBrandDto dto)
         {
+            try {
             var success = await _service.UpdateAsync(userId: CurrentUserId, id, dto);
             if (!success) return NotFound();
             return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]

@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.4",
   "info": {
-    "title": "InventoryApi",
-    "version": "1.0"
+    "title": "My API",
+    "version": "v1"
   },
   "paths": {
     "/api/Auth/register": {
@@ -647,7 +647,7 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "default": "active"
+              "default": "all"
             }
           }
         ],
@@ -1140,11 +1140,16 @@
         "additionalProperties": false
       },
       "CreateItemDto": {
+        "required": [
+          "categoryId",
+          "name",
+          "unitOfMeasure"
+        ],
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "nullable": true
+            "minLength": 3,
+            "type": "string"
           },
           "categoryId": {
             "type": "integer",
@@ -1160,8 +1165,8 @@
             "format": "double"
           },
           "unitOfMeasure": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "flag": {
             "type": "boolean"
@@ -1316,11 +1321,16 @@
         "additionalProperties": false
       },
       "UpdateItemDto": {
+        "required": [
+          "categoryId",
+          "name",
+          "unitOfMeasure"
+        ],
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "nullable": true
+            "minLength": 3,
+            "type": "string"
           },
           "categoryId": {
             "type": "integer",
@@ -1336,8 +1346,8 @@
             "format": "double"
           },
           "unitOfMeasure": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "flag": {
             "type": "boolean"
@@ -1345,6 +1355,9 @@
           "notes": {
             "type": "string",
             "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -1359,8 +1372,21 @@
         },
         "additionalProperties": false
       }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme. Enter your token below (no need to type 'Bearer ' first).",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
   },
+  "security": [
+    {
+      "bearer": [ ]
+    }
+  ],
   "tags": [
     {
       "name": "Auth"

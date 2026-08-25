@@ -415,7 +415,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "InventoryApi.Models.Dtos.CreateItemDto",
+        "Type": "CreateItemDto",
         "IsRequired": true
       }
     ],
@@ -452,7 +452,7 @@
       },
       {
         "Name": "dto",
-        "Type": "InventoryApi.Models.Dtos.UpdateItemDto",
+        "Type": "UpdateItemDto",
         "IsRequired": true
       }
     ],

@@ -46,6 +46,19 @@ namespace InventoryApi.Repositories
             return rows > 0;
         }
 
+        public async Task<bool> ExistsAsync(int userId, string normalizedStoreName)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            const string sql = @"
+            SELECT CAST(COUNT(1) AS BIT) 
+            FROM Stores 
+            WHERE UserId = @UserId 
+              AND LOWER(TRIM(St_Name)) = @StoreName";
+
+            return await connection.ExecuteScalarAsync<bool>(sql, new { UserId = userId, StoreName = normalizedStoreName });
+        }
+
         public async Task<bool> DeleteAsync(int id, int userId)
         {
             using var connection = _connectionFactory.CreateConnection();

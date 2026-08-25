@@ -1,6 +1,6 @@
 import apiClient from '@/api/client';
 import type Category from '@/interfaces/ICategorie';
-import { Alert, Button, CircularProgress,IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import Box from '@mui/material/Box';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
@@ -12,6 +12,7 @@ import { useSnackbar } from '@/context/SnackbarContext';
 import FormDialog from '@/components/Dialog/FormDialog';
 import axios from 'axios';
 import CategoryFormFields from '@/components/Dialog/CategoryFormFields';
+import { useLoading } from '@/context/LoadingContext';
 
 
 
@@ -19,12 +20,11 @@ import CategoryFormFields from '@/components/Dialog/CategoryFormFields';
 
 export default function Categories() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
 
 
   const [open, setOpen] = useState(false);
   const {showError, showSuccess} = useSnackbar();
+  const { setIsLoading} = useLoading();
 
   // Create State
   const [catName, setCatName] = useState('');
@@ -48,23 +48,14 @@ export default function Categories() {
   const [selectedDeleteId, setSelectedDeleteId] = useState<number | null>(null);
 
   useEffect(() => {
+    setIsLoading(true)
     apiClient.get('/categories')
     .then(res => setCategories(res.data))
-    .catch(() => setError('Failed to load categories.'))
+    .catch(() => showError('Failed to load categories.'))
     .finally(() => setIsLoading(false));
   },[])
 
-  if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-   if (error) {
-    return <Alert severity="error">{error}</Alert>;
-  }
+  
 
   const columns: GridColDef<(typeof categories)[number]>[] = [
   {

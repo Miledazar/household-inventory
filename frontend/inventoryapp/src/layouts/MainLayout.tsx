@@ -88,6 +88,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
+import { useLoading } from '@/context/LoadingContext';
 
 const drawerWidth = 240;
 
@@ -118,6 +120,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
+
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -156,7 +159,7 @@ export default function PersistentDrawerLeft() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
-
+const {isLoading} = useLoading();
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -231,7 +234,31 @@ export default function PersistentDrawerLeft() {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <Outlet/>
+       <Box sx={{ position: 'relative' }}>
+    <Box
+      sx={{
+        opacity: isLoading ? 0.4 : 1,
+        pointerEvents: isLoading ? 'none' : 'auto',
+        transition: 'opacity 0.2s ease',
+      }}
+    >
+      <Outlet />
+    </Box>
+
+    {isLoading && (
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    )}
+  </Box>
       </Main>
     </Box>
   );

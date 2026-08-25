@@ -25,7 +25,7 @@ namespace InventoryApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string filter = "active")
+        public async Task<IActionResult> GetAll([FromQuery] string filter = "all")
         {
             var items = await _repository.GetAllAsync(userId: CurrentUserId, filter);
             return Ok(items);
@@ -59,11 +59,16 @@ namespace InventoryApi.Controllers
             try
             {
                 var id = await _itemService.CreateAsync(userId: CurrentUserId, dto);
-                return Ok(new { id });
+                var createdItem = await _repository.GetByIdAsync(id, userId: CurrentUserId);
+                return Ok(createdItem);
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
             }
         }
 
@@ -79,6 +84,10 @@ namespace InventoryApi.Controllers
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
             }
         }
 

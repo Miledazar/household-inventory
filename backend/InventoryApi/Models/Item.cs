@@ -5,8 +5,8 @@
         public int Id { get; set; }
         public int UserId { get; set; }
         public string It_Name { get; set; } = string.Empty;
-        public int CategoryId { get; set; }
-        public int? BrandId { get; set; }
+        public int Category_Id { get; set; }
+        public int? Brand_Id { get; set; }
         public decimal Threshold { get; set; }
         public string UnitOfMeasure { get; set; } = "Piece";
         public decimal CurrentQuantity { get; set; }
@@ -14,6 +14,10 @@
         public string? Notes { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; }
+
+        // Joined Display Names
+        public string? Category { get; set; } = string.Empty;
+        public string? Brand { get; set; } = string.Empty;
 
     }
 }

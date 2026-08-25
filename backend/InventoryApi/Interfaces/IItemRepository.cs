@@ -13,5 +13,6 @@ namespace InventoryApi.Interfaces
         Task<IEnumerable<Item>> GetLowStockAsync(int userId);
         Task<decimal?> GetLastPriceAsync(int itemId, int userId);
         Task<bool> HasTransactionHistoryAsync(int itemId);
+        Task<bool> ExistsAsync(int userId, string normalizedCategoryName, int? brandId);
     }
 }

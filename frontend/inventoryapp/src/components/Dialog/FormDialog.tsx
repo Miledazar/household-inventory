@@ -15,6 +15,7 @@ interface FormDialogProps {
 export default function FormDialog({open, onClose, title, children, onSubmit, submitLabel, isSubmitting = false, isViewOnly = false}:FormDialogProps){
     return (
         <Dialog open={open} maxWidth = "sm" fullWidth>
+            <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
             <DialogTitle>{title}</DialogTitle>
             <DialogContent>{children}</DialogContent>
             <DialogActions>
@@ -26,11 +27,12 @@ export default function FormDialog({open, onClose, title, children, onSubmit, su
                 <Button onClick={onClose} color="inherit" disabled={isSubmitting}>
                     Cancel
                 </Button>  
-                <Button onClick={onSubmit} variant="contained" disabled={isSubmitting}>
+                <Button type="submit" variant="contained" disabled={isSubmitting}>
                     {isSubmitting ? <CircularProgress size={24} color="inherit" /> : submitLabel}
                 </Button>
                 </>}
             </DialogActions>
+            </form>
         </Dialog>
     );
 }

@@ -17,7 +17,25 @@ namespace InventoryApi.Repositories
         public async Task<IEnumerable<Item>> GetAllAsync(int userId, string filter = "active")
         {
             using var connection = _connectionFactory.CreateConnection();
-            var sql = "SELECT * FROM Items WHERE UserId = @UserId";
+            var sql = @"SELECT 
+            i.Id,
+            i.UserId,
+            i.It_Name,
+            i.CategoryId AS Category_Id,
+            i.BrandId AS Brand_Id,
+            i.Threshold,
+            i.UnitOfMeasure,
+            i.CurrentQuantity,
+            i.Flag,
+            i.Notes,
+            i.IsActive,
+            i.CreatedAt,
+            c.Cat_Name AS Category,
+            b.Br_Name AS Brand
+            FROM Items i
+            Inner JOIN Categories c ON i.CategoryId = c.Id
+            LEFT JOIN Brands b ON i.BrandId = b.Id
+            WHERE i.UserId = @UserId;";
             sql += filter switch
             {
                 "active" => " AND IsActive = 1",
@@ -31,7 +49,25 @@ namespace InventoryApi.Repositories
         public async Task<Item?> GetByIdAsync(int id, int userId)
         {
             using var connection = _connectionFactory.CreateConnection();
-            const string sql = "SELECT * FROM Items WHERE Id = @Id AND UserId = @UserId";
+            const string sql = @"SELECT
+             i.Id,
+            i.UserId,
+            i.It_Name,
+            i.CategoryId AS Category_Id,
+            i.BrandId AS Brand_Id,
+            i.Threshold,
+            i.UnitOfMeasure,
+            i.CurrentQuantity,
+            i.Flag,
+            i.Notes,
+            i.IsActive,
+            i.CreatedAt,
+            c.Cat_Name AS Category,
+            b.Br_Name AS Brand
+            FROM Items i
+            Inner JOIN Categories c ON i.CategoryId = c.Id
+            LEFT JOIN Brands b ON i.BrandId = b.Id
+            WHERE i.Id = @Id AND i.UserId = @UserId;";
             return await connection.QuerySingleOrDefaultAsync<Item>(sql, new { Id = id, UserId = userId });
         }
 
@@ -41,17 +77,33 @@ namespace InventoryApi.Repositories
             const string sql = @"
                 INSERT INTO Items (UserId, It_Name, CategoryId, BrandId, Threshold, CurrentQuantity, Flag, Notes, UnitOfMeasure, IsActive)
                 OUTPUT INSERTED.Id
-                VALUES (@UserId, @It_Name, @CategoryId, @BrandId, @Threshold, @CurrentQuantity, @Flag, @Notes, @UnitOfMeasure, 1)";
+                VALUES (@UserId, @It_Name, @Category_Id, @Brand_Id, @Threshold, @CurrentQuantity, @Flag, @Notes, @UnitOfMeasure, 1)";
             return await connection.QuerySingleAsync<int>(sql, item);
         }
 
+        public async Task<bool> ExistsAsync(int userId, string normalizedItemName, int? brandId)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            const string sql = @"
+                    SELECT CAST(COUNT(1) AS BIT)
+                    FROM Items
+                    WHERE UserId = @UserId
+                      AND LOWER(TRIM(It_Name)) = @ItemName
+                      AND (
+                            (@BrandId IS NULL AND BrandId IS NULL)
+                         OR (BrandId = @BrandId)
+                      )";
+
+            return await connection.ExecuteScalarAsync<bool>(sql, new { UserId = userId, ItemName = normalizedItemName, BrandId = brandId });
+        }
         public async Task<bool> UpdateAsync(Item item)
         {
             using var connection = _connectionFactory.CreateConnection();
             const string sql = @"
                 UPDATE Items
-                SET It_Name = @It_Name, CategoryId = @CategoryId, BrandId = @BrandId,
-                    Threshold = @Threshold, Flag = @Flag, Notes = @Notes, UnitOfMeasure = @UnitOfMeasure
+                SET It_Name = @It_Name, CategoryId = @Category_Id, BrandId = @Brand_Id,
+                    Threshold = @Threshold, Flag = @Flag, Notes = @Notes, UnitOfMeasure = @UnitOfMeasure, IsActive = @IsActive
                 WHERE Id = @Id AND UserId = @UserId";
             var rows = await connection.ExecuteAsync(sql, item);
             return rows > 0;
