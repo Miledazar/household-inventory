@@ -5,6 +5,7 @@ namespace InventoryApi.Interfaces
 {
     public interface IInventoryBatchRepository
     {
+        Task<IEnumerable<InventoryBatch>> GetAllAsync(int userId);
         Task<IEnumerable<InventoryBatch>> GetByItemIdAsync(int itemId, int userId);
         Task<InventoryBatch?> GetByIdAsync(int id, int userId);
         Task<int> CreateAsync(InventoryBatch batch, IDbConnection connection, IDbTransaction dbTransaction);

@@ -15,6 +15,17 @@ namespace InventoryApi.Repositories
             _connectionFactory = connectionFactory;
         }
 
+        public async Task<IEnumerable<InventoryBatch>> GetAllAsync(int userId) {
+
+            using var connection = _connectionFactory.CreateConnection();
+            const string sql = @"
+                SELECT ib.Id, ib.ItemId, ib.TransactionLineId, ib.PurchasedQuantity, ib.RemainingQuantity, ib.UnitPrice, ib.PurchaseDate, ib.ExpirationDate
+                FROM InventoryBatches ib
+                JOIN Items i ON i.Id = ib.ItemId
+                WHERE i.UserId = @UserId AND ib.RemainingQuantity > 0
+                ORDER BY ib.PurchaseDate ASC";
+            return await connection.QueryAsync<InventoryBatch>(sql, new {UserId = userId });
+        }
         public async Task<IEnumerable<InventoryBatch>> GetByItemIdAsync(int itemId, int userId)
         {
             using var connection = _connectionFactory.CreateConnection();

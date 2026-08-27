@@ -48,6 +48,9 @@ namespace InventoryApi.Services
                 if (dto.Type is "Purchase" or "Consumption" or "Wasted" && line.Quantity < 0)
                     throw new ArgumentException($"Quantity must be positive for {dto.Type} transactions.");
 
+                if (line.UnitPrice.HasValue && line.UnitPrice < 0)
+                    throw new ArgumentException("Unit price cannot be negative.");
+
                 var plan = new LinePlan { Line = line };
                 bool createsNewBatch = dto.Type == "Purchase" || (dto.Type == "Adjustment" && line.Quantity > 0);
 

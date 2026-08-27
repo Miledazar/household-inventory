@@ -55,6 +55,10 @@ namespace InventoryApi.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            catch (Microsoft.Data.SqlClient.SqlException ex) when (ex.Number == 2601 || ex.Number == 2627)
+            {
+                return BadRequest("This item and batch combination has already been added to this transaction. Please combine the quantities into a single line instead.");
+            }
         }
     }
 }

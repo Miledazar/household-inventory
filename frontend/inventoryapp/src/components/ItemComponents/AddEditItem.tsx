@@ -19,6 +19,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import AddIcon from "@mui/icons-material/Add";
 import { BatchComponent } from "./BatchComponent";
+import { QuickCreateDialog } from "../Dialog/QuickCreateDialog";
 interface AddEditItemProps {
   item: Item;
   onChange: <K extends keyof Item>(field: K, value: Item[K]) => void;
@@ -66,6 +67,21 @@ export function AddEditItem({
   const [brandsError, setBrandsError] = useState<string | null>(null);
   const [value, setValue] = useState("1");
 
+  // create category
+  const [quickCategoryOpen, setQuickCategoryOpen] = useState(false);
+  const emptyCategory: Category = {
+    id: 0,
+    cat_Name: "",
+    cat_Description: "",
+  };
+
+  // create brand
+  const [quickBrandOpen, setQuickBrandOpen] = useState(false);
+  const emptyBrand: Brand = {
+    id: 0,
+    br_Name: "",
+  };
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -91,10 +107,20 @@ export function AddEditItem({
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList onChange={handleChange} variant="fullWidth">
             <Tab label="Item Details" value="1" />
-            <Tab label="Batches" value="2" />
+            {!isCreate && <Tab label="Batches" value="2" />}
           </TabList>
         </Box>
-        <TabPanel value="1">
+        <TabPanel
+          value="1"
+          sx={{
+            border: 1,
+            maxHeight: 480,
+            borderColor: "divider",
+            borderRadius: 2,
+            overflow: "hidden",
+            overflowY: "auto",
+          }}
+        >
           <TextField
             autoFocus={!readOnly}
             label="Item Name"
@@ -138,7 +164,7 @@ export function AddEditItem({
               <Tooltip title="Add New Category">
                 <IconButton
                   color="primary"
-                  // onClick={handleOpenCategoryDialog}
+                  onClick={() => setQuickCategoryOpen(true)}
                   disabled={loadingCategories}
                   sx={{
                     border: "1px solid",
@@ -153,24 +179,113 @@ export function AddEditItem({
             )}
           </Box>
 
-          <TextField
-            select
-            label="Brand"
-            fullWidth
-            value={item.brand_Id ?? ""}
-            onChange={(e) => onChange("brand_Id", Number(e.target.value))}
-            disabled={loadingBrands || !!brandsError}
-            error={!!brandsError}
-            helperText={brandsError}
-            slotProps={{ input: { readOnly } }}
-            sx={{ mb: 2, mt: 1 }}
+          {/* Create Category */}
+          <QuickCreateDialog<Category>
+            open={quickCategoryOpen}
+            onClose={() => setQuickCategoryOpen(false)}
+            title="Add New Category"
+            endpoint="/categories"
+            initialValue={emptyCategory}
+            onCreated={(created: Category) => {
+              setCategories((prev) => [...prev, created]);
+              onChange("category_Id", created.id);
+            }}
+            successMessage="Category created succesfully."
+            renderFields={(value, onChange) => (
+              <>
+                <TextField
+                  autoFocus
+                  label="Category Name"
+                  fullWidth
+                  required
+                  value={value.cat_Name}
+                  onChange={(e) => onChange("cat_Name", e.target.value)}
+                  sx={{ mb: 2, mt: 1 }}
+                />
+                <TextField
+                  label="Description"
+                  fullWidth
+                  multiline
+                  rows={2}
+                  value={value.cat_Description ?? ""}
+                  onChange={(e) => onChange("cat_Description", e.target.value)}
+                />
+              </>
+            )}
+          />
+
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              alignItems: "center",
+            }}
           >
-            {brands.map((br) => (
-              <MenuItem key={br.id} value={br.id}>
-                {br.br_Name}
-              </MenuItem>
-            ))}
-          </TextField>
+            <TextField
+              select
+              label="Brand"
+              fullWidth
+              value={item.brand_Id ?? ""}
+              onChange={(e) => onChange("brand_Id", Number(e.target.value))}
+              disabled={loadingBrands || !!brandsError}
+              error={!!brandsError}
+              helperText={brandsError}
+              slotProps={{ input: { readOnly } }}
+              sx={{ mb: 2, mt: 1 }}
+            >
+              {brands.map((br) => (
+                <MenuItem key={br.id} value={br.id}>
+                  {br.br_Name}
+                </MenuItem>
+              ))}
+            </TextField>
+
+            {!readOnly && (
+              <Tooltip title="Add New Brand">
+                <IconButton
+                  color="primary"
+                  onClick={() => setQuickBrandOpen(true)}
+                  disabled={loadingBrands}
+                  sx={{
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: 1,
+                    mb: 1,
+                    p: "14px",
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </Box>
+
+          {/* Create Brand */}
+          <QuickCreateDialog<Brand>
+            open={quickBrandOpen}
+            onClose={() => setQuickBrandOpen(false)}
+            title="Add New Brand"
+            endpoint="/brands"
+            initialValue={emptyBrand}
+            onCreated={(created: Brand) => {
+              setBrands((prev) => [...prev, created]);
+              onChange("brand_Id", created.id);
+            }}
+            successMessage="Brand created succesfully."
+            renderFields={(value, onChange) => (
+              <>
+                <TextField
+                  autoFocus
+                  label="Brand Name"
+                  fullWidth
+                  required
+                  value={value.br_Name}
+                  onChange={(e) => onChange("br_Name", e.target.value)}
+                  sx={{ mb: 2, mt: 1 }}
+                />
+              </>
+            )}
+          />
 
           <Stack direction="row" sx={{ paddingY: 1 }} spacing={2}>
             <TextField
@@ -248,9 +363,11 @@ export function AddEditItem({
             )}
           </Stack>
         </TabPanel>
-        <TabPanel value="2">
-          <BatchComponent itemId={item.id} />
-        </TabPanel>
+        {!isCreate && (
+          <TabPanel value="2">
+            <BatchComponent itemId={item.id} />
+          </TabPanel>
+        )}
       </TabContext>
     </>
   );

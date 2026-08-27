@@ -1,5 +1,14 @@
 import type Item from "@/interfaces/IItem";
-import { Box, Button, Chip, CircularProgress, IconButton } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  IconButton,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -9,8 +18,6 @@ import AddIcon from "@mui/icons-material/Add";
 import { useLoading } from "@/context/LoadingContext";
 import apiClient from "@/api/client";
 import { useSnackbar } from "@/context/SnackbarContext";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ArchiveIcon from "@mui/icons-material/Archive";
 import FormDialog from "@/components/Dialog/FormDialog";
 import { AddEditItem } from "@/components/ItemComponents/AddEditItem";
 
@@ -58,119 +65,123 @@ export default function Items() {
 
   const columns: GridColDef<(typeof items)[number]>[] = [
     {
-      field: "warning",
-      headerName: "",
-      width: 10,
-      sortable: false,
-      filterable: false,
-      headerAlign: "right",
-      disableColumnMenu: true,
-      align: "right",
+      field: "it_Name",
+      headerName: "Item name",
+      flex: 1.2,
+      minWidth: 140,
+    },
+    {
+      field: "category",
+      headerName: "Category",
+      width: 150,
+    },
+    {
+      field: "brand",
+      headerName: "Brand",
+      width: 150,
+      renderCell: (params) => params.value || "—",
+    },
+
+    {
+      field: "currentQuantity",
+      headerName: "Stock level",
+      flex: 1.4,
+      minWidth: 200,
+      sortComparator: (v1, v2, param1, param2) =>
+        (param1.api.getRow(param1.id).currentQuantity ?? 0) -
+        (param2.api.getRow(param2.id).currentQuantity ?? 0),
       renderCell: (params) => {
-        const isLessThanThreshold =
-          params.row.currentQuantity! < params.row.threshold;
+        const qty = params.row.currentQuantity ?? 0;
+        const threshold = params.row.threshold ?? 0;
+        const isUnderThreshold = qty < threshold;
+
+        const denominator = threshold > 0 ? threshold * 2 : Math.max(qty, 1);
+        const pct = Math.min((qty / denominator) * 100, 100);
+
         return (
           <Box
             sx={{
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
               height: "100%",
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              gap: "2px",
             }}
           >
-            <Box
-              sx={{
-                width: 12,
-                height: 12,
-                borderRadius: "50%",
-                backgroundColor: isLessThanThreshold
-                  ? "error.main"
-                  : "success.main",
-                animation: isLessThanThreshold ? "pulse 1.5s infinite" : "none",
-                "@keyframes pulse": {
-                  "0%": {
-                    boxShadow: "0 0 0 0 rgba(211, 47, 47, 0.7)",
-                  },
-                  "70%": {
-                    boxShadow: "0 0 0 8px rgba(211, 47, 47, 0)",
-                  },
-                  "100%": {
-                    boxShadow: "0 0 0 0 rgba(211, 47, 47, 0)",
-                  },
-                },
-              }}
-            />
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Box sx={{ flex: 1, minWidth: 50 }}>
+                <LinearProgress
+                  variant="determinate"
+                  value={pct}
+                  color={isUnderThreshold ? "error" : "success"}
+                  sx={{ height: 6, borderRadius: 3 }}
+                />
+              </Box>
+              <Typography
+                variant="body2"
+                sx={{ whiteSpace: "nowrap", fontWeight: 500 }}
+              >
+                {qty} {params.row.unitOfMeasure}
+              </Typography>
+            </Box>
+            <Typography
+              variant="caption"
+              sx={{ color: "text.secondary", fontSize: "0.72rem" }}
+            >
+              min {threshold}
+            </Typography>
           </Box>
         );
       },
     },
     {
-      field: "it_Name",
-      headerName: "Item Name",
-      flex: 1,
-    },
-    {
-      field: "category",
-      headerName: "Item Category",
-      flex: 1,
-    },
-    {
-      field: "brand",
-      headerName: "Brand",
-      flex: 1,
-    },
-    {
-      field: "threshold",
-      headerName: "Threshold",
-      width: 150,
-    },
-    {
       field: "flag",
       headerName: "Flag",
-      width: 100,
+      width: 110,
       disableColumnMenu: true,
-
       renderCell: (params) => {
-        const flagItem = params.value as boolean;
+        const isAvoid = params.value as boolean;
         return (
           <Chip
-            label={flagItem ? "Avoid" : "Preferred"}
+            label={isAvoid ? "Avoid" : "Preferred"}
             size="small"
-            color={flagItem ? "warning" : "success"}
-            variant={flagItem ? "outlined" : "filled"}
+            sx={(theme) => ({
+              bgcolor: alpha(
+                theme.palette[isAvoid ? "error" : "success"].main,
+                0.12,
+              ),
+              color: theme.palette[isAvoid ? "error" : "success"].dark,
+              fontWeight: 500,
+              border: "none",
+            })}
           />
         );
       },
-    },
-    {
-      field: "unitOfMeasure",
-      headerName: "UOM",
-      width: 100,
-      hideSortIcons: true,
-    },
-    {
-      field: "currentQuantity",
-      headerName: "Current Quantity",
-      flex: 1,
     },
     {
       field: "isActive",
       headerName: "Status",
-      width: 120,
+      width: 130,
       renderCell: (params) => {
         const isActive = params.row.isActive as boolean;
         return (
           <Chip
-            icon={isActive ? <CheckCircleIcon /> : <ArchiveIcon />}
             label={isActive ? "Active" : "Archived"}
             size="small"
-            color={isActive ? "success" : "default"}
-            variant={isActive ? "filled" : "outlined"}
+            sx={(theme) => ({
+              bgcolor: alpha(
+                theme.palette[isActive ? "success" : "warning"].main,
+                0.12,
+              ),
+              color: theme.palette[isActive ? "success" : "warning"].dark,
+              fontWeight: 500,
+              border: "none",
+            })}
           />
         );
       },
     },
-
     {
       field: "actions",
       headerName: "Actions",
@@ -213,7 +224,7 @@ export default function Items() {
     setDialogOpen(true);
   };
 
-  // view / edit item — fetch the full item then open the dialog in the right mode
+  // view / edit item
   const loadItemIntoDialog = (id: number, targetMode: DialogMode) => {
     setMode(targetMode);
     setFormItem(emptyItem);
@@ -376,6 +387,7 @@ export default function Items() {
         <DataGrid
           rows={items}
           columns={columns}
+          getRowHeight={() => 64}
           initialState={{
             pagination: {
               paginationModel: {

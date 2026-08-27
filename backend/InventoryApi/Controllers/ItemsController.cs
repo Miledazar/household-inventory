@@ -120,5 +120,12 @@ namespace InventoryApi.Controllers
             var batches = await _batchRepository.GetByItemIdAsync(id, userId: CurrentUserId);
             return Ok(batches);
         }
+
+        [HttpGet("batches")]
+        public async Task<IActionResult> GetAllBatches()
+        {
+            var batches = await _batchRepository.GetAllAsync( userId: CurrentUserId);
+            return Ok(batches);
+        }
     }
 }

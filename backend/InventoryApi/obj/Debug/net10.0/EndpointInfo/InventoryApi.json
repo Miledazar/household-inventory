@@ -871,6 +871,18 @@
         }
       }
     },
+    "/api/Items/batches": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Stores": {
       "get": {
         "tags": [
@@ -1181,7 +1193,7 @@
       "CreateStoreDto": {
         "type": "object",
         "properties": {
-          "name": {
+          "st_Name": {
             "type": "string",
             "nullable": true
           }
@@ -1365,7 +1377,7 @@
       "UpdateStoreDto": {
         "type": "object",
         "properties": {
-          "name": {
+          "st_Name": {
             "type": "string",
             "nullable": true
           }

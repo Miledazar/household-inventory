@@ -32,13 +32,16 @@ namespace InventoryApi.Repositories
             return await connection.QuerySingleOrDefaultAsync<Transaction>(sql, new { Id = id, UserId = userId });
         }
 
-        public async Task<IEnumerable<TransactionLine>> GetLinesAsync(int transactionId, int userId)
+        public async Task<IEnumerable<TransactionLineWithBatchDto>> GetLinesAsync(int transactionId, int userId)
         {
             using var connection = _connectionFactory.CreateConnection();
-            const string sql = @"SELECT * FROM TransactionLines
-                                JOIN Transactions ON Transactions.Id = TransactionLines.TransactionId
-                                WHERE TransactionLines.TransactionId = @TransactionId AND Transactions.UserId = @UserId";
-            return await connection.QueryAsync<TransactionLine>(sql, new { TransactionId = transactionId, UserId = userId });
+            const string sql = @"SELECT tl.Id, tl.TransactionId, tl.ItemId, tl.BatchId, tl.Quantity, tl.UnitPrice,
+                                ib.ExpirationDate
+                                FROM TransactionLines tl
+                                JOIN Transactions t ON t.Id = tl.TransactionId
+                                LEFT JOIN InventoryBatches ib ON ib.TransactionLineId = tl.Id
+                                WHERE tl.TransactionId = @TransactionId AND t.UserId = @UserId";
+            return await connection.QueryAsync<TransactionLineWithBatchDto>(sql, new { TransactionId = transactionId, UserId = userId });
         }
 
         public async Task<int> CreateWithLinesAsync(int userId, CreateTransactionDto dto, List<LinePlan> plans)

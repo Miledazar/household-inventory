@@ -1,6 +1,6 @@
 export interface Batche {
- id :string
- itemId : string
+ id :number
+ itemId : number
  transactionLineId : string
  purchasedQuantity : number
  remainingQuantity : number

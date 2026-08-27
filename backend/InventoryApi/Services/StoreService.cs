@@ -15,12 +15,12 @@ namespace InventoryApi.Services
 
         public async Task<int> CreateAsync(int userId, CreateStoreDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.Name))
+            if (string.IsNullOrWhiteSpace(dto.st_Name))
             {
                 throw new ArgumentException("Store name cannot be empty.");
             }
 
-            var normalizedName = dto.Name.Trim().ToLower();
+            var normalizedName = dto.st_Name.Trim().ToLower();
 
             bool exists = await _repository.ExistsAsync(userId, normalizedName);
 
@@ -32,14 +32,14 @@ namespace InventoryApi.Services
             var store = new Store
             {
                 UserId = userId,
-                St_Name = dto.Name
+                St_Name = dto.st_Name
             };
             return await _repository.CreateAsync(store);
         }
 
         public async Task<bool> UpdateAsync(int userId, int id, UpdateStoreDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.Name))
+            if (string.IsNullOrWhiteSpace(dto.st_Name))
             {
                 throw new ArgumentException("Stores name cannot be empty.");
             }
@@ -50,7 +50,7 @@ namespace InventoryApi.Services
                 throw new KeyNotFoundException("Store not found.");
             }
 
-            var newNormalizedName = dto.Name.Trim().ToLower();
+            var newNormalizedName = dto.st_Name.Trim().ToLower();
             var currentNormalizedName = existingStore.St_Name.Trim().ToLower();
 
             if (newNormalizedName != currentNormalizedName)
@@ -67,7 +67,7 @@ namespace InventoryApi.Services
             {
                 Id = id,
                 UserId = userId,
-                St_Name = dto.Name
+                St_Name = dto.st_Name
             };
             return await _repository.UpdateAsync(store);
         }
