@@ -10,7 +10,6 @@ import {
   Chip,
   Autocomplete,
   Tooltip,
-  CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -21,6 +20,7 @@ import type Grocery from "@/interfaces/IGrocery";
 import type Item from "@/interfaces/IItem";
 import FormDialog from "@/components/Dialog/FormDialog";
 import { AddEditItem } from "@/components/ItemComponents/AddEditItem";
+import { useLoading } from "@/context/LoadingContext";
 
 interface GroceryListItem {
   id: number;
@@ -39,7 +39,7 @@ export default function GroceryListDetail() {
   const [list, setList] = useState<Grocery | null>(null);
   const [listItems, setListItems] = useState<GroceryListItem[]>([]);
   const [items, setItems] = useState<Item[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { setIsLoading } = useLoading();
 
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
   const [quickItemOpen, setQuickItemOpen] = useState(false);
@@ -79,11 +79,14 @@ export default function GroceryListDetail() {
   const itemOptions = useMemo(() => {
     return items
       .filter((i) => !listItems.some((li) => li.itemId === i.id))
-      .map((i) => ({ id: i.id, label: i.it_Name }));
+      .map((i) => ({
+        id: i.id,
+        label: i.it_Name,
+        brand: i.brand,
+      }));
   }, [items, listItems]);
 
-  const itemNameById = (itemId: number) =>
-    items.find((i) => i.id === itemId)?.it_Name ?? `Item #${itemId}`;
+  const itemById = (itemId: number) => items.find((i) => i.id === itemId);
 
   // Check/uncheck (persists immediately)
   const handleToggleChecked = (listItem: GroceryListItem) => {
@@ -188,6 +191,21 @@ export default function GroceryListDetail() {
       });
   };
 
+  const handleFinishShopping = () => {
+    apiClient
+      .post(`grocerylists/${id}/prepare-transaction`)
+      .then((res) => {
+        navigate("/transactions", { state: { prefilledDraft: res.data } });
+      })
+      .catch((err) => {
+        const message =
+          typeof err?.response?.data === "string"
+            ? err.response.data
+            : "Failed to prepare transaction.";
+        showError(message);
+      });
+  };
+
   // Close list
   const handleCloseList = () => {
     apiClient
@@ -198,14 +216,6 @@ export default function GroceryListDetail() {
       })
       .catch(() => showError("Failed to close list."));
   };
-
-  if (isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   if (!list) return null;
 
@@ -231,6 +241,22 @@ export default function GroceryListDetail() {
           options={itemOptions}
           value={itemOptions.find((o) => o.id === selectedItemId) ?? null}
           onChange={(_e, newValue) => setSelectedItemId(newValue?.id ?? null)}
+          getOptionLabel={(option) =>
+            option.brand ? `${option.label} (${option.label})` : option.label
+          }
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+          renderOption={(props, option) => (
+            <Box component="li" {...props} key={option.id}>
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Typography variant="body2">{option.label}</Typography>
+                {option.brand && (
+                  <Typography variant="caption" color="text.secondary">
+                    {option.brand}
+                  </Typography>
+                )}
+              </Box>
+            </Box>
+          )}
           renderInput={(params) => (
             <TextField {...params} label="Add Item" size="small" />
           )}
@@ -251,75 +277,104 @@ export default function GroceryListDetail() {
       </Box>
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        {listItems.map((li) => (
-          <Box
-            key={li.id}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              border: "1px solid",
-              borderColor: "divider",
-              borderRadius: 1,
-              p: 1.5,
-            }}
-          >
-            <Checkbox
-              checked={li.isChecked}
-              onChange={() => handleToggleChecked(li)}
-            />
-            <Typography sx={{ flexGrow: 1 }}>
-              {itemNameById(li.itemId)}
-            </Typography>
-            <TextField
-              label="Qty"
-              type="number"
-              size="small"
-              sx={{ width: 90 }}
-              value={li.quantityNeeded}
-              slotProps={{ input: { inputProps: { min: 0, step: "1" } } }}
-              onChange={(e) =>
-                handleFieldChange(
-                  li.id,
-                  "quantityNeeded",
-                  Number(e.target.value),
-                )
-              }
-              onBlur={(e) =>
-                handleFieldBlur(li, "quantityNeeded", Number(e.target.value))
-              }
-            />
-            <TextField
-              label="Est. Price"
-              type="number"
-              size="small"
-              sx={{ width: 110 }}
-              value={li.estimatedPrice ?? ""}
-              slotProps={{ input: { inputProps: { min: 0, step: "0.01" } } }}
-              onChange={(e) =>
-                handleFieldChange(
-                  li.id,
-                  "estimatedPrice",
-                  e.target.value ? Number(e.target.value) : null,
-                )
-              }
-              onBlur={(e) =>
-                handleFieldBlur(
-                  li,
-                  "estimatedPrice",
-                  e.target.value ? Number(e.target.value) : null,
-                )
-              }
-            />
-            <IconButton
-              color="error"
-              size="small"
-              onClick={() => handleRemoveItem(li.id)}
+        {listItems.map((li) => {
+          const item = itemById(li.itemId);
+
+          return (
+            <Box
+              key={li.id}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: 1,
+                p: 1.5,
+              }}
             >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </Box>
-        ))}
+              <Checkbox
+                checked={li.isChecked}
+                onChange={() => handleToggleChecked(li)}
+              />
+
+              <Box
+                sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}
+              >
+                <Typography>
+                  {item?.it_Name}
+                  {item?.brand && (
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      color="text.secondary"
+                    >
+                      {" "}
+                      ({item.brand})
+                    </Typography>
+                  )}
+                </Typography>
+              </Box>
+
+              {item?.flag && (
+                <Chip
+                  label="Avoid"
+                  size="small"
+                  color={item.flag ? "error" : "success"}
+                  variant="outlined"
+                />
+              )}
+
+              <TextField
+                label="Qty"
+                type="number"
+                size="small"
+                sx={{ width: 90 }}
+                value={li.quantityNeeded}
+                slotProps={{ input: { inputProps: { min: 0, step: "1" } } }}
+                onChange={(e) =>
+                  handleFieldChange(
+                    li.id,
+                    "quantityNeeded",
+                    Number(e.target.value),
+                  )
+                }
+                onBlur={(e) =>
+                  handleFieldBlur(li, "quantityNeeded", Number(e.target.value))
+                }
+              />
+              <TextField
+                label="Est. Price"
+                type="number"
+                size="small"
+                sx={{ width: 110 }}
+                value={li.estimatedPrice ?? ""}
+                slotProps={{ input: { inputProps: { min: 0, step: "0.01" } } }}
+                onChange={(e) =>
+                  handleFieldChange(
+                    li.id,
+                    "estimatedPrice",
+                    e.target.value ? Number(e.target.value) : null,
+                  )
+                }
+                onBlur={(e) =>
+                  handleFieldBlur(
+                    li,
+                    "estimatedPrice",
+                    e.target.value ? Number(e.target.value) : null,
+                  )
+                }
+              />
+              <IconButton
+                color="error"
+                size="small"
+                onClick={() => handleRemoveItem(li.id)}
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </Box>
+          );
+        })}
         {listItems.length === 0 && (
           <Typography
             color="text.secondary"
@@ -338,7 +393,11 @@ export default function GroceryListDetail() {
         >
           Close List
         </Button>
-        <Button variant="contained" disabled={checkedCount === 0}>
+        <Button
+          variant="contained"
+          disabled={checkedCount === 0}
+          onClick={handleFinishShopping}
+        >
           Finish Shopping ({checkedCount})
         </Button>
       </Box>

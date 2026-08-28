@@ -3,6 +3,7 @@ import type Brand from "@/interfaces/IBrand";
 import type Category from "@/interfaces/ICategorie";
 import type Item from "@/interfaces/IItem";
 import {
+  Autocomplete,
   Box,
   FormControlLabel,
   IconButton,
@@ -141,24 +142,29 @@ export function AddEditItem({
               mt: 1,
             }}
           >
-            <TextField
-              select
-              label="Category"
+            <Autocomplete
+              options={categories}
               fullWidth
-              value={item.category_Id ?? ""}
-              onChange={(e) => onChange("category_Id", Number(e.target.value))}
-              required
-              disabled={loadingCategories || !!categoriesError}
-              error={!!categoriesError}
-              helperText={categoriesError}
-              slotProps={{ input: { readOnly } }}
-            >
-              {categories.map((cat) => (
-                <MenuItem key={cat.id} value={cat.id}>
-                  {cat.cat_Name}
-                </MenuItem>
-              ))}
-            </TextField>
+              getOptionLabel={(cat) => cat.cat_Name}
+              value={
+                categories.find((cat) => cat.id === item.category_Id) ?? null
+              }
+              onChange={(_, newValue) =>
+                onChange("category_Id", newValue ? newValue.id : null)
+              }
+              loading={loadingCategories}
+              disabled={!!categoriesError}
+              readOnly={readOnly}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Category"
+                  error={!!categoriesError}
+                  helperText={categoriesError}
+                  sx={{ mt: 1 }}
+                />
+              )}
+            />
 
             {!readOnly && (
               <Tooltip title="Add New Category">
@@ -171,6 +177,7 @@ export function AddEditItem({
                     borderColor: "divider",
                     borderRadius: 1,
                     p: "14px",
+                    mt: 1,
                   }}
                 >
                   <AddIcon />
@@ -221,24 +228,27 @@ export function AddEditItem({
               alignItems: "center",
             }}
           >
-            <TextField
-              select
-              label="Brand"
+            <Autocomplete
+              options={brands}
               fullWidth
-              value={item.brand_Id ?? ""}
-              onChange={(e) => onChange("brand_Id", Number(e.target.value))}
-              disabled={loadingBrands || !!brandsError}
-              error={!!brandsError}
-              helperText={brandsError}
-              slotProps={{ input: { readOnly } }}
-              sx={{ mb: 2, mt: 1 }}
-            >
-              {brands.map((br) => (
-                <MenuItem key={br.id} value={br.id}>
-                  {br.br_Name}
-                </MenuItem>
-              ))}
-            </TextField>
+              getOptionLabel={(br) => br.br_Name}
+              value={brands.find((br) => br.id === item.brand_Id) ?? null}
+              onChange={(_, newValue) =>
+                onChange("brand_Id", newValue ? newValue.id : null)
+              }
+              loading={loadingBrands}
+              disabled={!!brandsError}
+              readOnly={readOnly}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Brand"
+                  error={!!brandsError}
+                  helperText={brandsError}
+                  sx={{ mb: 2, mt: 1 }}
+                />
+              )}
+            />
 
             {!readOnly && (
               <Tooltip title="Add New Brand">
@@ -324,15 +334,15 @@ export function AddEditItem({
               </MenuItem>
             ))}
           </TextField>
-
-          <TextField
+          {/* dont need notes on item */}
+          {/* <TextField
             label="Notes"
             fullWidth
             value={item.notes}
             onChange={(e) => onChange("notes", e.target.value)}
             slotProps={{ input: { readOnly } }}
             sx={{ mb: 2, mt: 1 }}
-          />
+          /> */}
           <Stack spacing={1} direction="row">
             <FormControlLabel
               control={

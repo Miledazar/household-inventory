@@ -47,6 +47,13 @@ const TRANSACTION_TYPES: TransactionType[] = [
   "Wasted",
 ];
 
+const TRANSACTION_TYPE_LABELS: Record<string, string> = {
+  Purchase: "Purchase",
+  Consumption: "Used",
+  Adjustment: "Adjustment",
+  Wasted: "Wasted",
+};
+
 export function AddTransaction({
   transaction,
   onChange,
@@ -83,13 +90,6 @@ export function AddTransaction({
   };
   const [newItem, setNewItem] = useState<Item>(emptyNewItem);
   const [batches, setBatches] = useState<Batche[]>([]);
-
-  // const [availableBatches, setAvailableBatches] = useState<
-  //   Record<
-  //     number,
-  //     { id: number; remainingQuantity: number; expirationDate: string | null }[]
-  //   >
-  // >({});
 
   useEffect(() => {
     apiClient
@@ -188,13 +188,6 @@ export function AddTransaction({
       });
   };
 
-  // const fetchBatchesForItem = (itemId: number) => {
-  //   if (availableBatches[itemId]) return;
-  //   apiClient.get(`/items/${itemId}/batches`).then((res) => {
-  //     setAvailableBatches((prev) => ({ ...prev, [itemId]: res.data }));
-  //   });
-  // };
-
   const handleTypeChange = <K extends keyof CreateTransactionDto>(
     field: K,
 
@@ -232,7 +225,7 @@ export function AddTransaction({
         >
           {TRANSACTION_TYPES.map((t) => (
             <MenuItem key={t} value={t}>
-              {t}
+              {TRANSACTION_TYPE_LABELS[t]}
             </MenuItem>
           ))}
         </TextField>

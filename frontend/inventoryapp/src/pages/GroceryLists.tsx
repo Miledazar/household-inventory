@@ -3,7 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import apiClient from "@/api/client";
 import { useEffect, useState } from "react";
-import { Box, Button, IconButton, TextField } from "@mui/material";
+import { Box, Button, IconButton, TextField, Tooltip } from "@mui/material";
 import { useLoading } from "@/context/LoadingContext";
 import { useSnackbar } from "@/context/SnackbarContext";
 import type Grocery from "@/interfaces/IGrocery";
@@ -147,21 +147,32 @@ export default function GroceryLists() {
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleGenerate}
-          sx={{ mr: 2 }}
+        <Tooltip
+          title={
+            <>
+              Automatically adds <strong>active</strong> items that have fallen
+              below their stock threshold to this grocery list.
+            </>
+          }
         >
-          Generate List
-        </Button>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleOpenCreate}
-        >
-          Create List
-        </Button>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleGenerate}
+            sx={{ mr: 2 }}
+          >
+            Add Low-Stock Items
+          </Button>
+        </Tooltip>
+        <Tooltip title="Creates empty grocery list">
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleOpenCreate}
+          >
+            Create List
+          </Button>
+        </Tooltip>
       </Box>
 
       <Box sx={{ flexGrow: 1, width: "100%" }}>

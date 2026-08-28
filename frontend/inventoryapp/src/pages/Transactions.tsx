@@ -10,6 +10,7 @@ import type Transaction from "@/interfaces/ITransaction";
 import type { CreateTransactionDto } from "@/interfaces/ITransaction";
 import FormDialog from "@/components/Dialog/FormDialog";
 import { AddTransaction } from "@/components/TransactionComponents/AddTransaction";
+import { useLocation } from "react-router-dom";
 
 const emptyTransaction: CreateTransactionDto = {
   type: "Purchase",
@@ -23,6 +24,8 @@ const emptyTransaction: CreateTransactionDto = {
 type DialogMode = "add" | "view";
 
 export default function Transactions() {
+  const location = useLocation();
+
   const { setIsLoading } = useLoading();
   const { showError, showSuccess } = useSnackbar();
 
@@ -44,8 +47,32 @@ export default function Transactions() {
       .finally(() => setIsLoading(false));
   }, []);
 
+  useEffect(() => {
+    const fct = async () => {
+      const draft = location.state?.prefilledDraft;
+      if (draft) {
+        setTransactionForm(draft);
+        setMode("add");
+        setDialogOpen(true);
+      }
+    };
+    fct();
+  }, [location.state]);
+
+  const TRANSACTION_TYPE_LABELS: Record<string, string> = {
+    Purchase: "Purchase",
+    Consumption: "Used",
+    Adjustment: "Adjustment",
+    Wasted: "Wasted",
+  };
+
   const columns: GridColDef<(typeof transactions)[number]>[] = [
-    { field: "type", headerName: "Transaction Type", flex: 1 },
+    {
+      field: "type",
+      headerName: "Transaction Type",
+      flex: 1,
+      valueFormatter: (value: string) => TRANSACTION_TYPE_LABELS[value],
+    },
     {
       field: "date",
       headerName: "Transaction Date",

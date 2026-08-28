@@ -36,8 +36,12 @@ namespace InventoryApi.Services
 
             foreach (var item in lowStockItems)
             {
-                var lastPrice = await _itemRepository.GetLastPriceAsync(item.Id, userId);
-                await _groceryListRepository.AddItemAsync(listId, userId, item.Id, item.Threshold, lastPrice);
+                //added also if the item isactive not archived
+                if (item.IsActive)
+                {
+                    var lastPrice = await _itemRepository.GetLastPriceAsync(item.Id, userId);
+                    await _groceryListRepository.AddItemAsync(listId, userId, item.Id, item.Threshold, lastPrice);
+                }
             }
 
             return listId;

@@ -187,6 +187,19 @@ export function AddItemToTransaction({
     field: keyof CreateTransactionLineDto,
     value: number | null,
   ) => {
+    if (value === null) {
+      setErrorHandler((prev) => ({
+        ...prev,
+        quantity: {
+          error: false,
+          errorMessage: "",
+          maxValue: item.currentQuantity,
+          minValue: 1,
+        },
+      }));
+      handleLineChange(index, field, value);
+      return;
+    }
     const selectedBatch = batches.find((b) => b.id === value);
     if (!selectedBatch) return;
     setErrorHandler((prev) => ({
@@ -267,7 +280,7 @@ export function AddItemToTransaction({
                 }
                 slotProps={{
                   input: { readOnly },
-                  htmlInput: { min: type === "Adjustment" ? 0 : 0.1 },
+                  htmlInput: { min: 0 },
                 }}
                 sx={{ flex: 1 }}
               />
@@ -293,33 +306,61 @@ export function AddItemToTransaction({
             </>
           )}
 
-          {!lineCreatesNewBatch && (
-            <TextField
-              select
-              label="Batch (optional — default: oldest first)"
-              value={line.batchId ?? ""}
-              onChange={(e) =>
-                handleBatchChange(
-                  index,
-                  "batchId",
-                  e.target.value ? Number(e.target.value) : null,
-                )
-              }
-              slotProps={{ input: { readOnly } }}
-              disabled={!itemBatches}
-              sx={{ flex: 2 }}
-            >
-              <MenuItem value="">Auto (Oldest Batch first)</MenuItem>
-              {itemBatches.map((batch) => (
-                <MenuItem key={batch.id} value={batch.id}>
-                  {batch.remainingQuantity} remaining
-                  {batch.expirationDate
-                    ? ` — expires ${new Date(batch.expirationDate).toLocaleDateString()}`
-                    : ""}
-                </MenuItem>
-              ))}
-            </TextField>
-          )}
+          {!lineCreatesNewBatch &&
+            (readOnly ? (
+              <Box sx={{ flex: 2, display: "flex", alignItems: "center" }}>
+                <Typography variant="body2" color="text.secondary">
+                  {line.batchId
+                    ? `Batch #${line.batchId}${
+                        line.expirationDate
+                          ? ` — expires ${new Date(line.expirationDate).toLocaleDateString()}`
+                          : ""
+                      }`
+                    : "Auto (Oldest batch first)"}
+                </Typography>
+              </Box>
+            ) : (
+              <TextField
+                select
+                label="Batch (optional — default: oldest first)"
+                value={line.batchId ?? ""}
+                onChange={(e) =>
+                  handleBatchChange(
+                    index,
+                    "batchId",
+                    e.target.value ? Number(e.target.value) : null,
+                  )
+                }
+                slotProps={{ input: { readOnly } }}
+                disabled={!itemBatches}
+                sx={{ flex: 2 }}
+              >
+                <MenuItem value="">Auto (Oldest Batch first)</MenuItem>
+                {itemBatches.map((batch) => (
+                  <MenuItem key={batch.id} value={batch.id}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        gap: 2,
+                      }}
+                    >
+                      <Typography variant="body2">
+                        Qty: <strong>{batch.remainingQuantity}</strong>
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {batch.expirationDate
+                          ? `Expires ${new Date(batch.expirationDate).toLocaleDateString()}`
+                          : batch.purchaseDate
+                            ? `Added ${new Date(batch.purchaseDate).toLocaleDateString()}`
+                            : "No expiry"}
+                      </Typography>
+                    </Box>
+                  </MenuItem>
+                ))}
+              </TextField>
+            ))}
         </Stack>
       </Box>
     </Stack>
