@@ -7,10 +7,14 @@ import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useLoading } from "@/context/LoadingContext";
 import { useSnackbar } from "@/context/SnackbarContext";
 import type Transaction from "@/interfaces/ITransaction";
-import type { CreateTransactionDto } from "@/interfaces/ITransaction";
+import type {
+  CreateTransactionDto,
+  CreateTransactionLineDto,
+} from "@/interfaces/ITransaction";
 import FormDialog from "@/components/Dialog/FormDialog";
 import { AddTransaction } from "@/components/TransactionComponents/AddTransaction";
 import { useLocation } from "react-router-dom";
+import type { Batche } from "@/interfaces/IBatches";
 
 const emptyTransaction: CreateTransactionDto = {
   type: "Purchase",
@@ -34,18 +38,34 @@ export default function Transactions() {
   const [mode, setMode] = useState<DialogMode>("add");
   const [transactionForm, setTransactionForm] =
     useState<CreateTransactionDto>(emptyTransaction);
+  const [batches, setBatches] = useState<Batche[]>([]);
   const [viewData, setViewData] = useState<CreateTransactionDto | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetchingTransaction, setIsFetchingTransaction] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
-    apiClient
-      .get("/transactions")
-      .then((res) => setTransactions(res.data))
+    Promise.all([
+      apiClient.get("/transactions"),
+      apiClient.get("/Items/batches"),
+    ])
+      .then(([resTransactions, resBatches]) => {
+        setTransactions(resTransactions.data);
+        setBatches(resBatches.data);
+      })
+
       .catch(() => showError("Failed to load transactions"))
       .finally(() => setIsLoading(false));
   }, []);
+  useEffect(() => {
+    apiClient
+      .get("/Items/batches")
+      .then((res) => {
+        setBatches(res.data);
+      })
+
+      .catch(() => showError("Failed to load Batches"));
+  }, [transactionForm]);
 
   useEffect(() => {
     const fct = async () => {
@@ -147,11 +167,90 @@ export default function Transactions() {
   ) => {
     setTransactionForm((prev) => ({ ...prev, [field]: value }));
   };
+  function resolveLinesWithFifo(
+    batches: Batche[],
+    type: string,
+  ): CreateTransactionLineDto[] {
+    const resolvedLines: CreateTransactionLineDto[] = [];
 
+    const consumedSoFar: Record<number, number> = {};
+
+    transactionForm.lines.forEach((line) => {
+      if (line.batchId || (line.quantity > 0 && type === "Adjustment")) {
+        resolvedLines.push(line);
+        return;
+      }
+
+      const itemBatches = batches
+        .filter(
+          (b) =>
+            b.itemId === line.itemId &&
+            b.remainingQuantity > (consumedSoFar[b.id] ?? 0),
+        )
+        .sort(
+          (a, b) =>
+            new Date(a.purchaseDate).getTime() -
+            new Date(b.purchaseDate).getTime(),
+        );
+
+      let remainingNeeded = Math.abs(line.quantity);
+
+      for (const batch of itemBatches) {
+        if (remainingNeeded <= 0) break;
+
+        const alreadyConsumed = consumedSoFar[batch.id] ?? 0;
+        const availableInBatch = batch.remainingQuantity - alreadyConsumed;
+        const takeFromThisBatch = Math.min(availableInBatch, remainingNeeded);
+
+        if (takeFromThisBatch <= 0) continue;
+
+        resolvedLines.push({
+          ...line,
+          quantity: line.quantity < 0 ? -takeFromThisBatch : takeFromThisBatch,
+          batchId: batch.id,
+        });
+
+        consumedSoFar[batch.id] = alreadyConsumed + takeFromThisBatch;
+        remainingNeeded -= takeFromThisBatch;
+      }
+
+      if (remainingNeeded > 0) {
+        throw new Error(
+          `Not enough stock for item ${line.itemId} — short by ${remainingNeeded}.`,
+        );
+      }
+    });
+
+    return resolvedLines;
+  }
   const handleAddSubmit = () => {
     setIsSubmitting(true);
+
+    let payload = transactionForm;
+
+    if (
+      transactionForm.type === "Consumption" ||
+      transactionForm.type === "Wasted" ||
+      transactionForm.type === "Adjustment"
+    ) {
+      try {
+        const resolvedLines = resolveLinesWithFifo(
+          batches,
+          transactionForm.type,
+        );
+        payload = { ...transactionForm, lines: resolvedLines };
+        setTransactionForm(payload);
+      } catch (err) {
+        showError(
+          err instanceof Error ? err.message : "Failed to resolve batches.",
+        );
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     apiClient
-      .post("/transactions", transactionForm)
+      .post("/transactions", payload)
       .then(() => {
         showSuccess("Transaction created successfully.");
         setDialogOpen(false);

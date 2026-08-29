@@ -59,6 +59,9 @@ builder.Services.AddScoped<IGroceryListRepository, GroceryListRepository>();
 builder.Services.AddScoped<GroceryListService>();
 builder.Services.AddScoped<UserInitializationService>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<IUnitOfMeasureRepository, UnitOfMeasureRepository>();
+builder.Services.AddScoped<UnitOfMeasureService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

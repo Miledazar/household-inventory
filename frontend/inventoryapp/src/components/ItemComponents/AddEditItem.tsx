@@ -7,7 +7,6 @@ import {
   Box,
   FormControlLabel,
   IconButton,
-  MenuItem,
   Stack,
   Switch,
   Tab,
@@ -21,37 +20,13 @@ import TabPanel from "@mui/lab/TabPanel";
 import AddIcon from "@mui/icons-material/Add";
 import { BatchComponent } from "./BatchComponent";
 import { QuickCreateDialog } from "../Dialog/QuickCreateDialog";
+import type { UnitOfMeasure } from "@/interfaces/IUnitOfMeasure";
 interface AddEditItemProps {
   item: Item;
   onChange: <K extends keyof Item>(field: K, value: Item[K]) => void;
   readOnly?: boolean;
   isCreate?: boolean;
 }
-
-const UNIT_OF_MEASURE_OPTIONS = [
-  "Piece",
-  "Pack",
-  "Box",
-  "Bag",
-  "Roll",
-  "Bottle",
-  "Can",
-  "Jar",
-  "Bar",
-  "Sheet",
-  "Pair",
-  "g",
-  "Kg",
-  "lb",
-  "oz",
-  "ml",
-  "L",
-  "fl oz",
-  "Gallon",
-  "Tablet",
-  "Refill",
-  "Tube",
-] as const;
 
 export function AddEditItem({
   item,
@@ -66,6 +41,11 @@ export function AddEditItem({
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loadingBrands, setLoadingBrands] = useState(true);
   const [brandsError, setBrandsError] = useState<string | null>(null);
+
+  const [unitOfMeasures, setUnitOfMeasures] = useState<UnitOfMeasure[]>([]);
+  const [loadingUom, setLoadingUom] = useState(true);
+  const [uomError, setUomError] = useState<string | null>(null);
+
   const [value, setValue] = useState("1");
 
   // create category
@@ -83,9 +63,18 @@ export function AddEditItem({
     br_Name: "",
   };
 
+  // create uom
+  const [quickUomOpen, setQuickUomOpen] = useState(false);
+  const emptyUom: UnitOfMeasure = {
+    id: 0,
+    name: "",
+    allowsDecimal: false,
+  };
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+
   useEffect(() => {
     apiClient
       .get("/categories")
@@ -100,6 +89,13 @@ export function AddEditItem({
       .then((res) => setBrands(res.data))
       .catch(() => setBrandsError("Failed to load brands."))
       .finally(() => setLoadingBrands(false));
+  }, []);
+  useEffect(() => {
+    apiClient
+      .get("/unitofmeasures")
+      .then((res) => setUnitOfMeasures(res.data))
+      .catch(() => setUomError("Failed to load brands."))
+      .finally(() => setLoadingUom(false));
   }, []);
 
   return (
@@ -308,41 +304,108 @@ export function AddEditItem({
               sx={{ mb: 2, mt: 1 }}
             />
 
-            <TextField
-              label="Current Quantity"
-              fullWidth
-              value={item.currentQuantity}
-              slotProps={{ input: { readOnly: true } }}
-              sx={{ mb: 2, mt: 1 }}
-            />
+            {!isCreate && (
+              <TextField
+                label="Current Quantity"
+                fullWidth
+                value={item.currentQuantity}
+                slotProps={{ input: { readOnly: true } }}
+                sx={{ mb: 2, mt: 1 }}
+              />
+            )}
           </Stack>
-
-          <TextField
-            select
-            label="Unit of Measure"
-            fullWidth
-            value={item.unitOfMeasure}
-            onChange={(e) => onChange("unitOfMeasure", e.target.value)}
-            required
-            disabled={readOnly}
-            slotProps={{ input: { readOnly } }}
-            sx={{ mb: 2, mt: 1 }}
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              alignItems: "center",
+            }}
           >
-            {UNIT_OF_MEASURE_OPTIONS.map((unit) => (
-              <MenuItem key={unit} value={unit}>
-                {unit}
-              </MenuItem>
-            ))}
-          </TextField>
-          {/* dont need notes on item */}
-          {/* <TextField
-            label="Notes"
-            fullWidth
-            value={item.notes}
-            onChange={(e) => onChange("notes", e.target.value)}
-            slotProps={{ input: { readOnly } }}
-            sx={{ mb: 2, mt: 1 }}
-          /> */}
+            <Autocomplete
+              options={unitOfMeasures}
+              fullWidth
+              getOptionLabel={(uom) => uom.name}
+              value={
+                unitOfMeasures.find(
+                  (uom) => uom.id === item.unitOfMeasure_Id,
+                ) ?? null
+              }
+              onChange={(_, newValue) =>
+                onChange("unitOfMeasure_Id", newValue ? newValue.id : null)
+              }
+              loading={loadingUom}
+              disabled={!!uomError}
+              readOnly={readOnly}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Unit Of Measure"
+                  error={!!uomError}
+                  helperText={uomError}
+                  sx={{ mb: 2, mt: 1 }}
+                />
+              )}
+            />
+
+            {!readOnly && (
+              <Tooltip title="Add New Unit of measure">
+                <IconButton
+                  color="primary"
+                  onClick={() => setQuickUomOpen(true)}
+                  disabled={loadingUom}
+                  sx={{
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: 1,
+                    mb: 1,
+                    p: "14px",
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </Box>
+
+          {/* Create UOM */}
+          <QuickCreateDialog<UnitOfMeasure>
+            open={quickUomOpen}
+            onClose={() => setQuickUomOpen(false)}
+            title="Add New Unit of measure"
+            endpoint="/unitofmeasures"
+            initialValue={emptyUom}
+            onCreated={(created: UnitOfMeasure) => {
+              setUnitOfMeasures((prev) => [...prev, created]);
+              onChange("unitOfMeasure_Id", created.id);
+            }}
+            successMessage="Unit of measure created succesfully."
+            renderFields={(value, onChange) => (
+              <>
+                <TextField
+                  autoFocus
+                  label="Unit of measure Name"
+                  fullWidth
+                  required
+                  value={value.name}
+                  onChange={(e) => onChange("name", e.target.value)}
+                  sx={{ mb: 2, mt: 1 }}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={value.allowsDecimal}
+                      onChange={(e) =>
+                        onChange("allowsDecimal", Boolean(e.target.value))
+                      }
+                    />
+                  }
+                  label="Allows Decimal Quantities"
+                />
+              </>
+            )}
+          />
+
           <Stack spacing={1} direction="row">
             <FormControlLabel
               control={

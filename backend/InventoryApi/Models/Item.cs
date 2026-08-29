@@ -8,7 +8,7 @@
         public int Category_Id { get; set; }
         public int? Brand_Id { get; set; }
         public decimal Threshold { get; set; }
-        public string UnitOfMeasure { get; set; } = "Piece";
+        public int UnitOfMeasure_Id { get; set; }
         public decimal CurrentQuantity { get; set; }
         public bool Flag { get; set; }
         public string? Notes { get; set; }
@@ -18,6 +18,8 @@
         // Joined Display Names
         public string? Category { get; set; } = string.Empty;
         public string? Brand { get; set; } = string.Empty;
+        public string? UnitOfMeasure { get; set; } = string.Empty;
+        public bool UnitOfMeasureAllowsDecimal { get; set; }
 
     }
 }

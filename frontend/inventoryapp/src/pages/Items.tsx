@@ -29,7 +29,7 @@ const emptyItem: Item = {
   threshold: 0,
   currentQuantity: 0,
   flag: false,
-  unitOfMeasure: "",
+  unitOfMeasure_Id: 0,
   isActive: true,
   notes: "",
 };
@@ -87,7 +87,7 @@ export default function Items() {
       headerName: "Stock level",
       flex: 1.4,
       minWidth: 200,
-      sortComparator: (v1, v2, param1, param2) =>
+      sortComparator: (_v1, _v2, param1, param2) =>
         (param1.api.getRow(param1.id).currentQuantity ?? 0) -
         (param2.api.getRow(param2.id).currentQuantity ?? 0),
       renderCell: (params) => {
@@ -264,7 +264,7 @@ export default function Items() {
     categoryId: formItem.category_Id,
     brandId: formItem.brand_Id,
     threshold: formItem.threshold,
-    unitOfMeasure: formItem.unitOfMeasure,
+    unitOfMeasureId: formItem.unitOfMeasure_Id,
     flag: formItem.flag,
     notes: formItem.notes || null,
   });
@@ -433,8 +433,7 @@ export default function Items() {
         onSubmit={confirmDelete}
         isSubmitting={isDeleting}
       >
-        Are you sure you want to delete this category? This action cannot be
-        undone.
+        Are you sure you want to delete this item? This action cannot be undone.
       </FormDialog>
     </Box>
   );

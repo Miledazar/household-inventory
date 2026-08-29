@@ -24,17 +24,20 @@ namespace InventoryApi.Repositories
             i.CategoryId AS Category_Id,
             i.BrandId AS Brand_Id,
             i.Threshold,
-            i.UnitOfMeasure,
+            i.UnitOfMeasureId,
             i.CurrentQuantity,
             i.Flag,
             i.Notes,
             i.IsActive,
             i.CreatedAt,
+            u.Name AS UnitOfMeasureName,
             c.Cat_Name AS Category,
-            b.Br_Name AS Brand
+            b.Br_Name AS Brand,
+            u.AllowsDecimal AS UnitOfMeasureAllowsDecimal
             FROM Items i
             Inner JOIN Categories c ON i.CategoryId = c.Id
             LEFT JOIN Brands b ON i.BrandId = b.Id
+            JOIN UnitOfMeasures u ON u.Id = i.UnitOfMeasureId
             WHERE i.UserId = @UserId;";
             sql += filter switch
             {
@@ -56,17 +59,20 @@ namespace InventoryApi.Repositories
             i.CategoryId AS Category_Id,
             i.BrandId AS Brand_Id,
             i.Threshold,
-            i.UnitOfMeasure,
+            i.UnitOfMeasureId,
             i.CurrentQuantity,
             i.Flag,
             i.Notes,
             i.IsActive,
             i.CreatedAt,
             c.Cat_Name AS Category,
-            b.Br_Name AS Brand
+            b.Br_Name AS Brand,
+            u.Name AS UnitOfMeasureName,
+            u.AllowsDecimal AS UnitOfMeasureAllowsDecimal
             FROM Items i
             Inner JOIN Categories c ON i.CategoryId = c.Id
             LEFT JOIN Brands b ON i.BrandId = b.Id
+            JOIN UnitOfMeasures u ON u.Id = i.UnitOfMeasureId
             WHERE i.Id = @Id AND i.UserId = @UserId;";
             return await connection.QuerySingleOrDefaultAsync<Item>(sql, new { Id = id, UserId = userId });
         }
@@ -75,9 +81,9 @@ namespace InventoryApi.Repositories
         {
             using var connection = _connectionFactory.CreateConnection();
             const string sql = @"
-                INSERT INTO Items (UserId, It_Name, CategoryId, BrandId, Threshold, CurrentQuantity, Flag, Notes, UnitOfMeasure, IsActive)
+                INSERT INTO Items (UserId, It_Name, CategoryId, BrandId, Threshold, CurrentQuantity, Flag, Notes, UnitOfMeasureId, IsActive)
                 OUTPUT INSERTED.Id
-                VALUES (@UserId, @It_Name, @Category_Id, @Brand_Id, @Threshold, @CurrentQuantity, @Flag, @Notes, @UnitOfMeasure, 1)";
+                VALUES (@UserId, @It_Name, @Category_Id, @Brand_Id, @Threshold, @CurrentQuantity, @Flag, @Notes, @UnitOfMeasure_Id, 1)";
             return await connection.QuerySingleAsync<int>(sql, item);
         }
 
@@ -103,7 +109,7 @@ namespace InventoryApi.Repositories
             const string sql = @"
                 UPDATE Items
                 SET It_Name = @It_Name, CategoryId = @Category_Id, BrandId = @Brand_Id,
-                    Threshold = @Threshold, Flag = @Flag, Notes = @Notes, UnitOfMeasure = @UnitOfMeasure, IsActive = @IsActive
+                    Threshold = @Threshold, Flag = @Flag, Notes = @Notes, UnitOfMeasure = @UnitOfMeasure_Id, IsActive = @IsActive
                 WHERE Id = @Id AND UserId = @UserId";
             var rows = await connection.ExecuteAsync(sql, item);
             return rows > 0;

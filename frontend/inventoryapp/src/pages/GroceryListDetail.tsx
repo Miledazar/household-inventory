@@ -51,7 +51,7 @@ export default function GroceryListDetail() {
     threshold: 0,
     currentQuantity: 0,
     flag: false,
-    unitOfMeasure: "",
+    unitOfMeasure_Id: 0,
     isActive: true,
     notes: "",
   };
@@ -349,7 +349,7 @@ export default function GroceryListDetail() {
                 size="small"
                 sx={{ width: 110 }}
                 value={li.estimatedPrice ?? ""}
-                slotProps={{ input: { inputProps: { min: 0, step: "0.01" } } }}
+                slotProps={{ input: { inputProps: { min: 0, step: "1" } } }}
                 onChange={(e) =>
                   handleFieldChange(
                     li.id,

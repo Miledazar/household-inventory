@@ -1,0 +1,11 @@
+CREATE TABLE UnitOfMeasures (
+    Id INT IDENTITY PRIMARY KEY,
+    UserId INT NOT NULL FOREIGN KEY REFERENCES Users(Id),
+    Name NVARCHAR(30) NOT NULL,
+    AllowsDecimal BIT NOT NULL DEFAULT 0
+);
+
+CREATE UNIQUE INDEX UQ_UnitOfMeasures_UserName ON UnitOfMeasures(UserId, Name);
+
+ALTER TABLE Items ADD UnitOfMeasureId INT NULL FOREIGN KEY REFERENCES UnitOfMeasures(Id);
+

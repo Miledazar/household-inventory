@@ -317,6 +317,77 @@
         }
       }
     },
+    "/api/Dashboard/summary": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Dashboard/low-stock": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Dashboard/expiring-soon": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "parameters": [
+          {
+            "name": "daysAhead",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 7
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Dashboard/spending-by-category": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Dashboard/expired": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/GroceryLists": {
       "get": {
         "tags": [
@@ -1094,6 +1165,131 @@
           }
         }
       }
+    },
+    "/api/UnitOfMeasures": {
+      "get": {
+        "tags": [
+          "UnitOfMeasures"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "UnitOfMeasures"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnitOfMeasureDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnitOfMeasureDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnitOfMeasureDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/UnitOfMeasures/{id}": {
+      "get": {
+        "tags": [
+          "UnitOfMeasures"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "UnitOfMeasures"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUnitOfMeasureDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUnitOfMeasureDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUnitOfMeasureDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "UnitOfMeasures"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1155,7 +1351,7 @@
         "required": [
           "categoryId",
           "name",
-          "unitOfMeasure"
+          "unitOfMeasureId"
         ],
         "type": "object",
         "properties": {
@@ -1176,9 +1372,9 @@
             "type": "number",
             "format": "double"
           },
-          "unitOfMeasure": {
-            "minLength": 1,
-            "type": "string"
+          "unitOfMeasureId": {
+            "type": "integer",
+            "format": "int32"
           },
           "flag": {
             "type": "boolean"
@@ -1264,6 +1460,19 @@
         },
         "additionalProperties": false
       },
+      "CreateUnitOfMeasureDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "allowsDecimal": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginDto": {
         "type": "object",
         "properties": {
@@ -1336,7 +1545,7 @@
         "required": [
           "categoryId",
           "name",
-          "unitOfMeasure"
+          "unitOfMeasureId"
         ],
         "type": "object",
         "properties": {
@@ -1357,9 +1566,9 @@
             "type": "number",
             "format": "double"
           },
-          "unitOfMeasure": {
-            "minLength": 1,
-            "type": "string"
+          "unitOfMeasureId": {
+            "type": "integer",
+            "format": "int32"
           },
           "flag": {
             "type": "boolean"
@@ -1380,6 +1589,19 @@
           "st_Name": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateUnitOfMeasureDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "allowsDecimal": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -1410,6 +1632,9 @@
       "name": "Categories"
     },
     {
+      "name": "Dashboard"
+    },
+    {
       "name": "GroceryLists"
     },
     {
@@ -1420,6 +1645,9 @@
     },
     {
       "name": "Transactions"
+    },
+    {
+      "name": "UnitOfMeasures"
     }
   ]
 }

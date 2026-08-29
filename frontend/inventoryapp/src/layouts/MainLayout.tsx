@@ -12,13 +12,14 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import { Link, Outlet, useLocation } from "react-router-dom";
-import { CircularProgress } from "@mui/material";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { CircularProgress, ListItemIcon } from "@mui/material";
 import { useLoading } from "@/context/LoadingContext";
 
 const drawerWidth = 240;
@@ -83,6 +84,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function PersistentDrawerLeft() {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
@@ -95,14 +97,20 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    navigate("/login", { replace: true });
+  };
+
   const pages = [
-    { label: "Dashboard", path: "/" },
-    { label: "Items", path: "/items" },
+    { label: "Dashboard", path: "/dashboard" },
+    { label: "Items", path: "/" },
     { label: "Transactions", path: "/transactions" },
     { label: "Grocery Lists", path: "/grocery-lists" },
     { label: "Categories", path: "/categories" },
     { label: "Brands", path: "/brands" },
     { label: "Stores", path: "/stores" },
+    { label: "Unit of measures", path: "/uom" },
   ];
 
   return (
@@ -164,6 +172,20 @@ export default function PersistentDrawerLeft() {
               </ListItemButton>
             </ListItem>
           ))}
+        </List>
+        <Divider />
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleLogout}>
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <LogoutIcon fontSize="small" color="error" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Logout"
+                slotProps={{ primary: { color: "error" } }}
+              />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
       <Main open={open}>

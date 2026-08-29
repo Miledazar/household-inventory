@@ -14,7 +14,7 @@ public abstract class ItemDtoBase
     public decimal Threshold { get; set; }
 
     [Required(ErrorMessage = "Unit of measure is required.")]
-    public string UnitOfMeasure { get; set; } = "Piece";
+    public int UnitOfMeasureId { get; set; }
 
     public bool Flag { get; set; }
 

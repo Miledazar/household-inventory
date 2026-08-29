@@ -84,7 +84,7 @@ export function AddTransaction({
     threshold: 0,
     currentQuantity: 0,
     flag: false,
-    unitOfMeasure: "",
+    unitOfMeasure_Id: 0,
     isActive: true,
     notes: "",
   };

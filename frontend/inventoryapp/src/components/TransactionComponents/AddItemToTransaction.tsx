@@ -38,6 +38,7 @@ interface ErrorHandler {
     minValue: number;
   };
 }
+
 export function AddItemToTransaction({
   type,
   readOnly,
@@ -56,130 +57,186 @@ export function AddItemToTransaction({
     return batches.filter((batch) => batch.itemId == item.id);
   }, [batches, item]);
 
-  useEffect(() => {
-    handleLineChange(index, "quantity", Number(1));
-  }, [line.batchId, index]);
+  // useEffect(() => {
+  //   handleLineChange(index, "quantity", 1);
+  // }, [line.batchId, index]);
+
+  const quantityStep = item.unitOfMeasureAllowsDecimal ? "0.01" : "1";
 
   const [errorHandler, setErrorHandler] = useState<ErrorHandler>({
     quantity: {
       error: false,
       errorMessage: "",
       maxValue: Number.MAX_SAFE_INTEGER,
-      minValue: type === "Adjustment" ? Number.MIN_SAFE_INTEGER : 1,
+      minValue:
+        type === "Adjustment" ? Number.MIN_SAFE_INTEGER : Number(quantityStep),
     },
   });
 
+  // Raw typed string for the Quantity field — kept separate from line.quantity
+  // so it can hold transient states like "-" while the user is still typing.
+  const [rawQuantity, setRawQuantity] = useState<string>(String(line.quantity));
+
+  useEffect(() => {
+    const fct = async () => {
+      setRawQuantity(String(line.quantity));
+    };
+    fct();
+  }, [line.quantity]);
+
+  const setError = (
+    error: boolean,
+    errorMessage: string,
+    maxValue: number,
+    minValue: number,
+  ) => {
+    setErrorHandler((prev) => ({
+      ...prev,
+      quantity: { error, errorMessage, maxValue, minValue },
+    }));
+  };
   const handleQuantityChange = (
     index: number,
     field: keyof CreateTransactionLineDto,
     value: number,
   ) => {
-    const selectedBatch = batches.find((b) => b.id === line.batchId)!;
-
-    if (!selectedBatch) {
-      if (type === "Adjustment" && value <= 0) {
-        setErrorHandler((prev) => ({
-          ...prev,
-          quantity: {
-            error: false,
-            errorMessage: "",
-            maxValue: Number.MAX_SAFE_INTEGER,
-            minValue: Number.MIN_SAFE_INTEGER,
-          },
-        }));
-        handleLineChange(index, field, Number(value));
-        return;
-      }
-      if (type === "Consumption" || type === "Wasted") {
-        setErrorHandler((prev) => ({
-          ...prev,
-          quantity: {
-            error: false,
-            errorMessage: "",
-            maxValue: Number.MAX_SAFE_INTEGER,
-            minValue: 1,
-          },
-        }));
-        handleLineChange(index, field, Number(value));
-        return;
-      }
+    if (readOnly) return;
+    const selectedBatch = batches.find((b) => b.id === line.batchId);
+    const stepNum = Number(quantityStep);
+    const sumBatchesQuantity = itemBatches.reduce((acc, val) => {
+      return acc + val.remainingQuantity;
+    }, 0);
+    if (!item.unitOfMeasureAllowsDecimal && !Number.isInteger(value)) {
+      setError(
+        true,
+        `Quantity must be a whole number for ${item.unitOfMeasure}`,
+        Number.MAX_SAFE_INTEGER,
+        stepNum,
+      );
+      handleLineChange(index, field, value);
+      return;
     }
 
     if (type === "Purchase") {
       if (value <= 0) {
-        setErrorHandler((prev) => ({
-          ...prev,
-          quantity: {
-            error: true,
-            errorMessage: "Quantity must be positive",
-            maxValue: Number.MAX_SAFE_INTEGER,
-            minValue: 1,
-          },
-        }));
+        setError(
+          true,
+          "Quantity must be positive",
+          Number.MAX_SAFE_INTEGER,
+          stepNum,
+        );
       } else {
-        setErrorHandler((prev) => ({
-          ...prev,
-          quantity: {
-            error: false,
-            errorMessage: "",
-            maxValue: Number.MAX_SAFE_INTEGER,
-            minValue: 1,
-          },
-        }));
+        setError(false, "", Number.MAX_SAFE_INTEGER, stepNum);
       }
-      handleLineChange(index, field, Number(value));
+      handleLineChange(index, field, value);
       return;
     }
-    if (type !== "Adjustment" && Number(value) <= 0) {
-      setErrorHandler((prev) => ({
-        ...prev,
-        quantity: {
-          error: true,
-          errorMessage: "Quantity must be postivie",
-          maxValue: prev.quantity.maxValue,
-          minValue: 1,
-        },
-      }));
-    } else if (
-      type === "Adjustment" &&
-      value < 0 &&
-      Math.abs(value) > selectedBatch.remainingQuantity
-    ) {
-      setErrorHandler((prev) => ({
-        ...prev,
-        quantity: {
-          error: true,
-          errorMessage:
-            "Quantity removed can't be Higher then current quantity",
-          maxValue: selectedBatch.remainingQuantity,
-          minValue: -selectedBatch.remainingQuantity,
-        },
-      }));
-    } else if (
-      (type === "Consumption" || type === "Wasted") &&
-      value > selectedBatch.remainingQuantity
-    ) {
-      setErrorHandler((prev) => ({
-        ...prev,
-        quantity: {
-          error: true,
-          errorMessage: "Quantity can't be Higher then current quantity",
-          maxValue: selectedBatch.remainingQuantity,
-          minValue: 1,
-        },
-      }));
-    } else {
-      setErrorHandler((prev) => ({
-        ...prev,
-        quantity: {
-          error: false,
-          errorMessage: "",
-          maxValue: prev.quantity.maxValue,
-          minValue: prev.quantity.minValue,
-        },
-      }));
+
+    // Adjustment: can be positive (found extra) or negative (removing stock)
+    if (type === "Adjustment") {
+      if (value < 0 && !selectedBatch && sumBatchesQuantity < Math.abs(value)) {
+        setError(
+          true,
+          "Quantity removed can't exceed remaining quantity",
+          sumBatchesQuantity,
+          -sumBatchesQuantity,
+        );
+      } else if (
+        value < 0 &&
+        selectedBatch &&
+        Math.abs(value) > selectedBatch.remainingQuantity
+      ) {
+        setError(
+          true,
+          "Quantity removed can't exceed remaining quantity",
+          selectedBatch.remainingQuantity,
+          -selectedBatch.remainingQuantity,
+        );
+      } else {
+        setError(false, "", Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+      }
+      handleLineChange(index, field, value);
+      return;
     }
-    handleLineChange(index, field, Number(value));
+
+    if (value <= 0) {
+      setError(
+        true,
+        "Quantity must be positive",
+        Number.MAX_SAFE_INTEGER,
+        stepNum,
+      );
+    } else if (selectedBatch && value > selectedBatch.remainingQuantity) {
+      setError(
+        true,
+        "Quantity can't exceed remaining quantity",
+        selectedBatch.remainingQuantity,
+        stepNum,
+      );
+    } else if (!selectedBatch && sumBatchesQuantity < Math.abs(value)) {
+      setError(
+        true,
+        `Quantity ${type === "Consumption" ? "used" : "wasted"} can't exceed remaining quantity`,
+        sumBatchesQuantity,
+        -sumBatchesQuantity,
+      );
+    } else {
+      setError(false, "", Number.MAX_SAFE_INTEGER, stepNum);
+    }
+    handleLineChange(index, field, value);
+  };
+  useEffect(() => {
+    const fn = async () => {
+      handleQuantityChange(index, "quantity", line.quantity);
+    };
+    fn();
+  }, [line.batchId, index]);
+  const handleQuantityKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedControlKeys = [
+      "Backspace",
+      "Delete",
+      "ArrowLeft",
+      "ArrowRight",
+      "Tab",
+    ];
+    if (allowedControlKeys.includes(e.key)) return;
+
+    const isDigit = /^[0-9]$/.test(e.key);
+    const isMinus = e.key === "-";
+
+    const isDot = e.key === "." && item.unitOfMeasureAllowsDecimal;
+
+    if (!isDigit && !isMinus && !isDot) {
+      e.preventDefault();
+      return;
+    }
+
+    if (isMinus) {
+      const isCurrentlyNegative = rawQuantity.startsWith("-");
+      e.preventDefault();
+      if (
+        isCurrentlyNegative ||
+        type === "Purchase" ||
+        type === "Wasted" ||
+        type === "Consumption"
+      )
+        return;
+      setRawQuantity("-");
+      return;
+    }
+  };
+
+  const handleQuantityInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRawQuantity(e.target.value);
+  };
+
+  const handleQuantityBlur = () => {
+    const parsed =
+      rawQuantity === "" || rawQuantity === "-" ? 0 : Number(rawQuantity);
+    setRawQuantity(String(parsed));
+    handleQuantityChange(index, "quantity", parsed);
   };
 
   const handleBatchChange = (
@@ -213,6 +270,7 @@ export function AddItemToTransaction({
     }));
     handleLineChange(index, field, Number(value));
   };
+
   return (
     <Stack spacing={2.5} sx={{ mb: 1 }}>
       <Box
@@ -232,7 +290,7 @@ export function AddItemToTransaction({
           }}
         >
           <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
-            {item.it_Name}
+            {item.it_Name} {item.brand ? `(${item.brand})` : ""}
           </Typography>
           {!readOnly && (
             <IconButton
@@ -247,19 +305,14 @@ export function AddItemToTransaction({
         <Stack direction="row" spacing={2}>
           <TextField
             label="Quantity"
-            type="number"
-            value={line.quantity}
-            onChange={(e) =>
-              handleQuantityChange(index, "quantity", Number(e.target.value))
-            }
+            type="text"
+            inputMode="decimal"
+            value={rawQuantity}
+            onKeyDown={handleQuantityKeyDown}
+            onChange={handleQuantityInputChange}
+            onBlur={handleQuantityBlur}
             error={errorHandler.quantity.error}
-            slotProps={{
-              input: { readOnly },
-              htmlInput: {
-                max: errorHandler.quantity.maxValue,
-                min: errorHandler.quantity.minValue,
-              },
-            }}
+            slotProps={{ input: { readOnly } }}
             required
             sx={{ flex: 1 }}
             helperText={errorHandler.quantity.errorMessage}
@@ -280,7 +333,7 @@ export function AddItemToTransaction({
                 }
                 slotProps={{
                   input: { readOnly },
-                  htmlInput: { min: 0 },
+                  htmlInput: { min: 0, step: "0.1" },
                 }}
                 sx={{ flex: 1 }}
               />
@@ -332,7 +385,7 @@ export function AddItemToTransaction({
                   )
                 }
                 slotProps={{ input: { readOnly } }}
-                disabled={!itemBatches}
+                disabled={itemBatches.length === 0}
                 sx={{ flex: 2 }}
               >
                 <MenuItem value="">Auto (Oldest Batch first)</MenuItem>

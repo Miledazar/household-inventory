@@ -190,6 +190,62 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "InventoryApi.Controllers.DashboardController",
+    "Method": "GetExpired",
+    "RelativePath": "api/Dashboard/expired",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.DashboardController",
+    "Method": "GetExpiringSoon",
+    "RelativePath": "api/Dashboard/expiring-soon",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "daysAhead",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.DashboardController",
+    "Method": "GetLowStock",
+    "RelativePath": "api/Dashboard/low-stock",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.DashboardController",
+    "Method": "GetSpendingByCategory",
+    "RelativePath": "api/Dashboard/spending-by-category",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.DashboardController",
+    "Method": "GetSummary",
+    "RelativePath": "api/Dashboard/summary",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "InventoryApi.Controllers.GroceryListsController",
     "Method": "GetAll",
     "RelativePath": "api/GroceryLists",
@@ -673,6 +729,85 @@
     "Method": "GetLines",
     "RelativePath": "api/Transactions/{id}/lines",
     "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.UnitOfMeasuresController",
+    "Method": "GetAll",
+    "RelativePath": "api/UnitOfMeasures",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.UnitOfMeasuresController",
+    "Method": "Create",
+    "RelativePath": "api/UnitOfMeasures",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "InventoryApi.Models.Dtos.CreateUnitOfMeasureDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.UnitOfMeasuresController",
+    "Method": "GetById",
+    "RelativePath": "api/UnitOfMeasures/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.UnitOfMeasuresController",
+    "Method": "Update",
+    "RelativePath": "api/UnitOfMeasures/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "InventoryApi.Models.Dtos.UpdateUnitOfMeasureDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "InventoryApi.Controllers.UnitOfMeasuresController",
+    "Method": "Delete",
+    "RelativePath": "api/UnitOfMeasures/{id}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
