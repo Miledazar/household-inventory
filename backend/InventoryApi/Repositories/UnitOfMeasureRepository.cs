@@ -48,6 +48,19 @@ namespace InventoryApi.Repositories
             return rows > 0;
         }
 
+        public async Task<bool> ExistsAsync(int userId, string normalizedUomName)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            const string sql = @"
+            SELECT CAST(COUNT(1) AS BIT) 
+            FROM UnitOfMeasures 
+            WHERE UserId = @UserId 
+            AND LOWER(TRIM(Name)) = @UomName";
+
+            return await connection.ExecuteScalarAsync<bool>(sql, new { UserId = userId, UomName = normalizedUomName });
+        }
+
         public async Task<bool> DeleteAsync(int id, int userId)
         {
             using var connection = _connectionFactory.CreateConnection();
@@ -62,7 +75,7 @@ namespace InventoryApi.Repositories
             // Items.UnitOfMeasure is currently a plain string column — see note below
             const string sql = @"
                 SELECT COUNT(*) FROM Items i
-                JOIN UnitOfMeasures u ON u.Name = i.UnitOfMeasure AND u.UserId = i.UserId
+                JOIN UnitOfMeasures u ON u.Id = i.UnitOfMeasureId AND u.UserId = i.UserId
                 WHERE u.Id = @UnitId AND i.UserId = @UserId";
             var count = await connection.QuerySingleAsync<int>(sql, new { UnitId = unitId, UserId = userId });
             return count > 0;

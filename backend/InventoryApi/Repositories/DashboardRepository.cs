@@ -97,9 +97,10 @@ namespace InventoryApi.Repositories
         {
             using var connection = _connectionFactory.CreateConnection();
             const string sql = @"
-                SELECT ib.Id AS BatchId, ib.ItemId, i.It_Name AS ItemName, ib.RemainingQuantity, ib.ExpirationDate, Br_Name [BrandName]
+                SELECT ib.Id AS BatchId, ib.ItemId, i.It_Name AS ItemName, ib.RemainingQuantity, u.name [UnitOfMeasure], ib.ExpirationDate, Br_Name [BrandName]
                 FROM InventoryBatches ib
                 JOIN Items i ON i.Id = ib.ItemId
+                inner join UnitOfMeasures u on u.id = UnitOfMeasureId
                 LEFT JOIN Brands b on b.id = i.BrandId
                 WHERE i.UserId = @UserId
                   AND ib.RemainingQuantity > 0

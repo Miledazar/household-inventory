@@ -109,7 +109,7 @@ export function AddItemToTransaction({
     if (!item.unitOfMeasureAllowsDecimal && !Number.isInteger(value)) {
       setError(
         true,
-        `Quantity must be a whole number for ${item.unitOfMeasure}`,
+        `Quantity must be a whole number for ${item.unitOfMeasureName}`,
         Number.MAX_SAFE_INTEGER,
         stepNum,
       );

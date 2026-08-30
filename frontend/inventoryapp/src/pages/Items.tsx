@@ -29,7 +29,7 @@ const emptyItem: Item = {
   threshold: 0,
   currentQuantity: 0,
   flag: false,
-  unitOfMeasure_Id: 0,
+  unitOfMeasureId: null,
   isActive: true,
   notes: "",
 };
@@ -122,7 +122,7 @@ export default function Items() {
                 variant="body2"
                 sx={{ whiteSpace: "nowrap", fontWeight: 500 }}
               >
-                {qty} {params.row.unitOfMeasure}
+                {qty} {params.row.unitOfMeasureName}
               </Typography>
             </Box>
             <Typography
@@ -264,7 +264,7 @@ export default function Items() {
     categoryId: formItem.category_Id,
     brandId: formItem.brand_Id,
     threshold: formItem.threshold,
-    unitOfMeasureId: formItem.unitOfMeasure_Id,
+    unitOfMeasureId: formItem.unitOfMeasureId,
     flag: formItem.flag,
     notes: formItem.notes || null,
   });

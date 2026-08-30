@@ -39,29 +39,38 @@ namespace InventoryApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateUnitOfMeasureDto dto)
         {
-            var unit = new UnitOfMeasure
+            try
             {
-                UserId = CurrentUserId,
-                Name = dto.Name,
-                AllowsDecimal = dto.AllowsDecimal
-            };
-            var id = await _repository.CreateAsync(unit);
-            return Ok(new { id });
+                var id = await _service.CreateAsync(userId: CurrentUserId, dto);
+                return Ok(new { id });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateUnitOfMeasureDto dto)
         {
-            var unit = new UnitOfMeasure
+            try
             {
-                Id = id,
-                UserId = CurrentUserId,
-                Name = dto.Name,
-                AllowsDecimal = dto.AllowsDecimal
-            };
-            var success = await _repository.UpdateAsync(unit);
-            if (!success) return NotFound();
-            return NoContent();
+                var success = await _service.UpdateAsync(userId: CurrentUserId, id, dto);
+                if (!success) return NotFound();
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]

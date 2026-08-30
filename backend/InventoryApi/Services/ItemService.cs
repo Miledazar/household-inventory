@@ -34,7 +34,7 @@ namespace InventoryApi.Services
                 Category_Id = dto.CategoryId,
                 Brand_Id = dto.BrandId,
                 Threshold = dto.Threshold,
-                UnitOfMeasure_Id = dto.UnitOfMeasureId,
+                UnitOfMeasureId = dto.UnitOfMeasureId,
                 Flag = dto.Flag,
                 Notes = dto.Notes
             };
@@ -77,7 +77,7 @@ namespace InventoryApi.Services
                 Category_Id = dto.CategoryId,
                 Brand_Id = dto.BrandId,
                 Threshold = dto.Threshold,
-                UnitOfMeasure_Id = dto.UnitOfMeasureId,
+                UnitOfMeasureId = dto.UnitOfMeasureId,
                 Flag = dto.Flag,
                 Notes = dto.Notes,
                 IsActive = dto.IsActive,

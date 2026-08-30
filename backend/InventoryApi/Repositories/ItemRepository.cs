@@ -83,7 +83,7 @@ namespace InventoryApi.Repositories
             const string sql = @"
                 INSERT INTO Items (UserId, It_Name, CategoryId, BrandId, Threshold, CurrentQuantity, Flag, Notes, UnitOfMeasureId, IsActive)
                 OUTPUT INSERTED.Id
-                VALUES (@UserId, @It_Name, @Category_Id, @Brand_Id, @Threshold, @CurrentQuantity, @Flag, @Notes, @UnitOfMeasure_Id, 1)";
+                VALUES (@UserId, @It_Name, @Category_Id, @Brand_Id, @Threshold, @CurrentQuantity, @Flag, @Notes, @UnitOfMeasureId, 1)";
             return await connection.QuerySingleAsync<int>(sql, item);
         }
 
@@ -109,7 +109,7 @@ namespace InventoryApi.Repositories
             const string sql = @"
                 UPDATE Items
                 SET It_Name = @It_Name, CategoryId = @Category_Id, BrandId = @Brand_Id,
-                    Threshold = @Threshold, Flag = @Flag, Notes = @Notes, UnitOfMeasure = @UnitOfMeasure_Id, IsActive = @IsActive
+                    Threshold = @Threshold, Flag = @Flag, Notes = @Notes, UnitOfMeasureId = @UnitOfMeasureId, IsActive = @IsActive
                 WHERE Id = @Id AND UserId = @UserId";
             var rows = await connection.ExecuteAsync(sql, item);
             return rows > 0;

@@ -48,6 +48,14 @@ export function AddEditItem({
 
   const [value, setValue] = useState("1");
 
+  const allowDecimal = (id: number, value: string) => {
+    const unit = unitOfMeasures.find((uom) => uom.id === id);
+    const val = Number(value);
+    if (!unit?.allowsDecimal) {
+      return Math.abs(Math.round(val));
+    }
+    return Math.abs(val);
+  };
   // create category
   const [quickCategoryOpen, setQuickCategoryOpen] = useState(false);
   const emptyCategory: Category = {
@@ -154,6 +162,7 @@ export function AddEditItem({
               renderInput={(params) => (
                 <TextField
                   {...params}
+                  required
                   label="Category"
                   error={!!categoriesError}
                   helperText={categoriesError}
@@ -293,27 +302,6 @@ export function AddEditItem({
             )}
           />
 
-          <Stack direction="row" sx={{ paddingY: 1 }} spacing={2}>
-            <TextField
-              label="Threshold"
-              fullWidth
-              value={item.threshold}
-              onChange={(e) => onChange("threshold", Number(e.target.value))}
-              required
-              slotProps={{ input: { readOnly } }}
-              sx={{ mb: 2, mt: 1 }}
-            />
-
-            {!isCreate && (
-              <TextField
-                label="Current Quantity"
-                fullWidth
-                value={item.currentQuantity}
-                slotProps={{ input: { readOnly: true } }}
-                sx={{ mb: 2, mt: 1 }}
-              />
-            )}
-          </Stack>
           <Box
             sx={{
               display: "flex",
@@ -326,19 +314,27 @@ export function AddEditItem({
               fullWidth
               getOptionLabel={(uom) => uom.name}
               value={
-                unitOfMeasures.find(
-                  (uom) => uom.id === item.unitOfMeasure_Id,
-                ) ?? null
+                unitOfMeasures.find((uom) => uom.id === item.unitOfMeasureId) ??
+                null
               }
-              onChange={(_, newValue) =>
-                onChange("unitOfMeasure_Id", newValue ? newValue.id : null)
-              }
+              onChange={(_, newValue) => {
+                const newUnitId = newValue ? newValue.id : null;
+                onChange("unitOfMeasureId", newUnitId);
+                if (newUnitId) {
+                  const correctedThreshold = allowDecimal(
+                    newUnitId,
+                    String(item.threshold),
+                  );
+                  onChange("threshold", correctedThreshold);
+                }
+              }}
               loading={loadingUom}
               disabled={!!uomError}
               readOnly={readOnly}
               renderInput={(params) => (
                 <TextField
                   {...params}
+                  required
                   label="Unit Of Measure"
                   error={!!uomError}
                   helperText={uomError}
@@ -367,6 +363,47 @@ export function AddEditItem({
             )}
           </Box>
 
+          <Stack direction="row" sx={{ paddingY: 1 }} spacing={2}>
+            {!item.unitOfMeasureId ? (
+              <TextField
+                label="Threshold"
+                type="number"
+                fullWidth
+                value={item.threshold}
+                onChange={(e) => onChange("threshold", Number(e.target.value))}
+                required
+                slotProps={{ input: { readOnly } }}
+                sx={{ mb: 2, mt: 1 }}
+              />
+            ) : (
+              <TextField
+                label="Threshold"
+                type="number"
+                fullWidth
+                value={item.threshold}
+                onChange={(e) =>
+                  onChange(
+                    "threshold",
+                    allowDecimal(item.unitOfMeasureId!, e.target.value),
+                  )
+                }
+                required
+                slotProps={{ input: { readOnly } }}
+                sx={{ mb: 2, mt: 1 }}
+              />
+            )}
+
+            {!isCreate && (
+              <TextField
+                label="Current Quantity"
+                fullWidth
+                value={item.currentQuantity}
+                slotProps={{ input: { readOnly: true } }}
+                sx={{ mb: 2, mt: 1 }}
+              />
+            )}
+          </Stack>
+
           {/* Create UOM */}
           <QuickCreateDialog<UnitOfMeasure>
             open={quickUomOpen}
@@ -376,7 +413,7 @@ export function AddEditItem({
             initialValue={emptyUom}
             onCreated={(created: UnitOfMeasure) => {
               setUnitOfMeasures((prev) => [...prev, created]);
-              onChange("unitOfMeasure_Id", created.id);
+              onChange("unitOfMeasureId", created.id);
             }}
             successMessage="Unit of measure created succesfully."
             renderFields={(value, onChange) => (

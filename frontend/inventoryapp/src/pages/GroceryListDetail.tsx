@@ -51,7 +51,7 @@ export default function GroceryListDetail() {
     threshold: 0,
     currentQuantity: 0,
     flag: false,
-    unitOfMeasure_Id: 0,
+    unitOfMeasureId: 0,
     isActive: true,
     notes: "",
   };
@@ -178,7 +178,7 @@ export default function GroceryListDetail() {
         categoryId: newItem.category_Id,
         brandId: newItem.brand_Id,
         threshold: newItem.threshold,
-        unitOfMeasure: newItem.unitOfMeasure,
+        unitOfMeasureId: newItem.unitOfMeasureId,
         flag: newItem.flag,
         notes: newItem.notes || null,
       })

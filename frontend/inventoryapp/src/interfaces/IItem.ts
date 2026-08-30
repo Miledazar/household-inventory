@@ -6,11 +6,11 @@ export default interface Item {
   threshold: number;
   currentQuantity: number;
   flag: boolean;
-  unitOfMeasure_Id: number | null;
+  unitOfMeasureId: number | null;
   isActive: boolean;
   notes: string;
   category?: string;
   brand?: string;
-   unitOfMeasure?: string;
+   unitOfMeasureName?: string;
  unitOfMeasureAllowsDecimal?: boolean
 }

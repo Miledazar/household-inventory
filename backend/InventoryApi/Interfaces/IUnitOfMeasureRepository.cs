@@ -10,5 +10,6 @@ namespace InventoryApi.Interfaces
         Task<bool> UpdateAsync(UnitOfMeasure unit);
         Task<bool> DeleteAsync(int id, int userId);
         Task<bool> HasReferencesAsync(int unitId, int userId);
+        Task<bool> ExistsAsync(int userId, string normalizedUomName);
     }
 }
