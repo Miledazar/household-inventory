@@ -53,8 +53,6 @@ export function BatchComponent({ itemId }: { itemId: number }) {
     color: StatusColor;
     bg: string | undefined;
   } {
-    // Use `=== null` (not `!days`) so a batch expiring TODAY (days === 0)
-    // doesn't get misread as "No Expiration".
     if (days === null)
       return { label: "No Expiration", color: "default", bg: undefined };
     if (days < 0) return { label: "Expired", color: "default", bg: undefined };
